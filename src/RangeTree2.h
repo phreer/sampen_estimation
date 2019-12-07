@@ -171,6 +171,14 @@ namespace RangeTree {
             return vec[index];
         }
 
+        inline bool within(Point p, unsigned m, int r) const {
+            for (unsigned i = 0; i < m; i++) {
+                if (p[i] < vec[i] - r || p[i] > vec[i] + r)
+                    return false;
+            }
+            return true;
+        }
+
         /**
         * Check for equality.
         *

@@ -12,17 +12,6 @@
 using std::vector;
 using std::list;
 
-vector<Point> get_points(const vector<int> &data, unsigned m)
-{
-    vector<Point> result(data.size() - m + 1);
-    for (unsigned i = 0; i < result.size(); i++)
-    {
-        Point p(vector<int>(data.begin() + i, data.begin() + i + m), 0);
-        result[i] = p;
-    }
-    return result;
-}
-
 unsigned powu(unsigned x, unsigned u) 
 {
     unsigned result = x;

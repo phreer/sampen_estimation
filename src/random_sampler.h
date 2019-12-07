@@ -12,12 +12,9 @@
 #include <random>
 #include <gsl/gsl_qrng.h>
 #include "RangeTree2.h"
+#include "utils.h"
 
 using std::vector;
-
-namespace RT = RangeTree;
-
-typedef RT::Point<int, int> Point;
 
 class uniform_int_generator
 {
