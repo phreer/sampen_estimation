@@ -8,6 +8,7 @@
 #ifndef __SAMPEN_CALCULATOR_H__
 #define __SAMPEN_CALCULATOR_H__
 
+#include <iostream>
 #include <vector>
 #include <math.h>
 
@@ -39,7 +40,7 @@ public:
                                  unsigned m, int r)
     {
         check_dim(data, m);
-        return compute_AB(data, m, r);
+        return _compute_AB(data, m, r);
     }
     double compute_entropy(const vector<int> &data,
                            unsigned m, int r)
@@ -47,6 +48,9 @@ public:
         vector<long long> AB = compute_AB(data, m, r);
         long long A = AB[0];
         long long B = AB[1];
+#ifdef DEBUG
+        std::cout << "A is " << A << ", B is " << B << std::endl;
+#endif
         unsigned N = data.size();
         return compute_sampen(A, B, N, m);
     }

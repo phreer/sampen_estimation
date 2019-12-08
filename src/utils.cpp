@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string.h>
+#include <limits.h>
 #include "utils.h"
 
 using std::cerr;

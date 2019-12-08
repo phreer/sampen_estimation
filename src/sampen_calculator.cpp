@@ -96,24 +96,19 @@ vector<long long> AB_calculator_point_d::compute_AB(
     long long A = 0;
     long long B = 0;
     unsigned m = points[0].dim() - 1;
-    unsigned N = points.size();
-    for (unsigned i = 0; i < N - 1; i++) 
+    unsigned N = points.size() + m - 1;
+    for (unsigned i = 0; i < points.size(); i++) 
     {
-        for (unsigned j = i + 1; j < N - 1; j++)
+        for (unsigned j = i + 1; j < points.size(); j++)
         {
             if (points[i].within(points[j], m, r)) 
             {
                 A += 1;
-                if ((points[j][m] >= points[i][m] - j ) && 
-                    (points[j][m] <= points[i][m] + j))
+                int diff = points[j][m] - points[i][m];
+                if ((-r <= diff) && (diff <= r))
                     B += 1;
             }
         }
-    }
-    for (unsigned i = 0; i < N - 1; i++) 
-    {
-        if (points[i].within(points[N - 1], m + 1, r))
-            B += 1;
     }
     result[0] = A;
     result[1] = B;
@@ -161,12 +156,12 @@ vector<long long> AB_calculator_point_rt::compute_AB(
 
     long long A = 0;
     long long B = 0;
-    unsigned N = points.size();
     unsigned m = points[0].dim() - 1;
+    unsigned N = points.size() + m;
     B = count_range_point_rt(points, m + 1, r);
     B -= (N - m);
-    vector<Point> _points(N - 1);
-    std::transform(points.begin(), points.end() - 1, _points.begin(), 
+    vector<Point> _points(points.size());
+    std::transform(points.begin(), points.end(), _points.begin(), 
                    [](const Point &p) -> Point { return p.drop_last(); });
     A = count_range_point_rt(_points, m, r);
     A -= (N - m);

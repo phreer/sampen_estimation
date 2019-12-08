@@ -46,6 +46,7 @@
 #include <memory>
 #include <limits>
 #include <algorithm>
+#include <stdexcept>
 
 namespace RangeTree {
 

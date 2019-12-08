@@ -9,6 +9,7 @@
 #include <iostream>
 #include <time.h>
 #include <algorithm>
+#include <string.h>
 
 #include "utils.h"
 #include "RangeTree2.h"
@@ -29,6 +30,7 @@ struct stat {
     bool t;
 } _stat;
 
+double calculate_sampen_direct(const vector<int> &data, unsigned m, int r);
 double calculate_sampen_rangetree(
     const vector<int> &data, unsigned m, int r);
 double calculate_sampen_rangetree_random(
@@ -60,7 +62,12 @@ int main(int argc, char *argv[]) {
     cout << "\tdata length: " << N << endl;
 
     // Compute sample entropy by direct method
-    double result = calculate_sampen_rangetree(data, _stat.m, _stat.r);
+    double result = calculate_sampen_direct(data, _stat.m, _stat.r);
+    cout << "Direct: SampEn(" << _stat.m << ", " << _stat.r << ", ";
+    cout << N << ") = " << result << endl;
+
+    // Compute sample entropy by range tree
+    result = calculate_sampen_rangetree(data, _stat.m, _stat.r);
     cout << "Range Tree: SampEn(" << _stat.m << ", " << _stat.r << ", ";
     cout << N << ") = " << result << endl;
 
@@ -69,17 +76,17 @@ int main(int argc, char *argv[]) {
     unsigned sample_num = 50;
     double result_random = calculate_sampen_rangetree_random(
         data, _stat.m, _stat.r, sample_size, sample_num);
-    cout << "Range Tree (random): SampEn(" ;
+    cout << "Quasi-random: SampEn(" ;
     cout << _stat.m << ", " << _stat.r << ", ";
     cout << N << ") = " << result_random << endl;
 
     double error = (result_random - result) / result;
-    cout << "Error (random) = " << error << endl;
+    cout << "Error (Quasi-random) = " << error << endl;
 
     // Compute sample entropy by sampling according to histogram
     double result_histogram = calculate_sampen_rangetree_hist(
         data, _stat.m, _stat.r, 0.1);
-    cout << "Range Tree (histogram): SampEn("; 
+    cout << "Hhistogram: SampEn("; 
     cout << _stat.m << ", " << _stat.r << ", ";
     cout << N << ") = " << result_histogram << endl;
 
@@ -87,6 +94,12 @@ int main(int argc, char *argv[]) {
     cout << "Error (histogram) = " << error << endl;
 
     return 0;
+}
+
+double calculate_sampen_direct(const vector<int> &data, unsigned m, int r)
+{
+    sampen_calculator_d sc;
+    return sc.compute_entropy(data, m, r);
 }
 
 double calculate_sampen_rangetree(
