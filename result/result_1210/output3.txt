@@ -1,0 +1,5 @@
+./build/bin/sampen	_stat.filename: ./data/141575000001.txt
+	_stat.m: 5
+	_stat.r: 30
+	_stat.t: 0
+	data length: 500000

@@ -7,7 +7,6 @@ set(LIB_SRC_LIST random_sampler.cpp utils.cpp sampen_calculator.cpp)
 set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g")
 set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O3")
 
-add_compile_options(-g -Wall)
 include_directories($ENV{HOME}/local/include)
 link_directories($ENV{HOME}/local/lib)
 

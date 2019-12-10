@@ -47,10 +47,10 @@ private:
     std::vector<unsigned> size;
     unsigned get_idx(const vector<unsigned> &idx) 
     {
-#ifdef DEBUG
-        if (idx.size() != size.size()) 
-        throw std::logic_error("idx.size() != size.size()");
-#endif
+//#ifdef DEBUG
+//        if (idx.size() != size.size())
+//        throw std::logic_error("idx.size() != size.size()");
+//#endif
         unsigned uidx = 0;
         for (unsigned i = 0; i < idx.size(); i++)
         {

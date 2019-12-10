@@ -11,6 +11,7 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
+#include <chrono>
 
 #include "random_sampler.h"
 
@@ -45,13 +46,19 @@ public:
     double compute_entropy(const vector<int> &data,
                            unsigned m, int r)
     {
+        auto start = std::chrono::system_clock::now();
         vector<long long> AB = compute_AB(data, m, r);
+        auto end = std::chrono::system_clock::now();
+        std::chrono::duration<double> interval = end - start;
+        std::cout << "time: " << interval.count() << "s" << std::endl;
+
         long long A = AB[0];
         long long B = AB[1];
 #ifdef DEBUG
         std::cout << "A is " << A << ", B is " << B << std::endl;
 #endif
         unsigned N = data.size();
+
         return compute_sampen(A, B, N, m);
     }
 };

@@ -4,6 +4,8 @@
 #include <list>
 
 #include <math.h>
+#include <stdlib.h>
+
 #include <gsl/gsl_qrng.h>
 
 #include "random_sampler.h"
@@ -22,12 +24,18 @@ unsigned powu(unsigned x, unsigned u)
     return result;
 }
 
+// random generator function
+int randomfunc(int j)
+{
+    return rand() % j;
+}
+
 vector<unsigned> random_permutation(unsigned n)
 {
     vector<unsigned> result(n);
     for (unsigned i = 0; i < n; i++)
     result[i] = i;
-    std::random_shuffle(result.begin(), result.end());
+    std::random_shuffle(result.begin(), result.end(), randomfunc);
     return result;
 }
 

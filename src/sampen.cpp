@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <string.h>
 
+#include "math.h"
 #include "utils.h"
 #include "RangeTree2.h"
 #include "sampen_calculator.h"
@@ -28,6 +29,7 @@ struct stat {
     unsigned m;
     int r;
     bool t;
+    double s; // sample_rate
 } _stat;
 
 double calculate_sampen_direct(const vector<int> &data, unsigned m, int r);
@@ -46,6 +48,7 @@ int main(int argc, char *argv[]) {
     _stat.filename = NULL;
     _stat.m = 0;
     _stat.r = -1;
+    _stat.s = -1.;
     _stat.t = false;
     pargs(argc, argv);
 
@@ -58,6 +61,7 @@ int main(int argc, char *argv[]) {
     cout << "\t_stat.filename: " << _stat.filename << endl;
     cout << "\t_stat.m: " << _stat.m << endl;
     cout << "\t_stat.r: " << _stat.r << endl;
+    cout << "\t_stat.s: " << _stat.s << endl;
     cout << "\t_stat.t: " << _stat.t << endl;
     cout << "\tdata length: " << N << endl;
 
@@ -66,14 +70,10 @@ int main(int argc, char *argv[]) {
     cout << "Direct: SampEn(" << _stat.m << ", " << _stat.r << ", ";
     cout << N << ") = " << result << endl;
 
-    // Compute sample entropy by range tree
-    result = calculate_sampen_rangetree(data, _stat.m, _stat.r);
-    cout << "Range Tree: SampEn(" << _stat.m << ", " << _stat.r << ", ";
-    cout << N << ") = " << result << endl;
-
     // Compute sample entropy by random sampling
-    unsigned sample_size = 500;
-    unsigned sample_num = 50;
+    double sample_rate = _stat.s;
+    unsigned sample_size = static_cast<unsigned>(N * sample_rate);
+    unsigned sample_num = static_cast<unsigned>(1 / sample_rate);
     double result_random = calculate_sampen_rangetree_random(
         data, _stat.m, _stat.r, sample_size, sample_num);
     cout << "Quasi-random: SampEn(" ;
@@ -83,15 +83,20 @@ int main(int argc, char *argv[]) {
     double error = (result_random - result) / result;
     cout << "Error (Quasi-random) = " << error << endl;
 
-    // Compute sample entropy by sampling according to histogram
-    double result_histogram = calculate_sampen_rangetree_hist(
-        data, _stat.m, _stat.r, 0.1);
-    cout << "Hhistogram: SampEn("; 
-    cout << _stat.m << ", " << _stat.r << ", ";
-    cout << N << ") = " << result_histogram << endl;
+    // Compute sample entropy by range tree
+    result = calculate_sampen_rangetree(data, _stat.m, _stat.r);
+    cout << "Range Tree: SampEn(" << _stat.m << ", " << _stat.r << ", ";
+    cout << N << ") = " << result << endl;
 
-    error = (result_histogram - result) / result;
-    cout << "Error (histogram) = " << error << endl;
+    // Compute sample entropy by sampling according to histogram
+    // double result_histogram = calculate_sampen_rangetree_hist(
+    //     data, _stat.m, _stat.r, 0.1);
+    // cout << "Hhistogram: SampEn("; 
+    // cout << _stat.m << ", " << _stat.r << ", ";
+    // cout << N << ") = " << result_histogram << endl;
+
+    // error = (result_histogram - result) / result;
+    // cout << "Error (histogram) = " << error << endl;
 
     return 0;
 }
@@ -170,6 +175,13 @@ void pargs(int argc, char *argv[])
             }
             _stat.r = (unsigned) atoi(argv[i+1]);
             break;
+        case 's':
+            if (_stat.s >= 0.) {
+                cerr << "sample_rate s has been set yet\n";
+                phelp(argv[0]);
+            }
+            _stat.s = atof(argv[i+1]);
+            break;
         default:
             cerr << "unrecognized option " << argv[i] << endl;
             phelp(argv[0]);
@@ -183,4 +195,6 @@ void pargs(int argc, char *argv[])
     }
     if (_stat.m == 0) _stat.m = 3;
     if (_stat.r == -1) _stat.r = 100;
+    if (_stat.s < 0) _stat.s = 0.1;
+    cout << _stat.s << endl;
 }

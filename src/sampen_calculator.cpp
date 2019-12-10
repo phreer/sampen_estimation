@@ -6,6 +6,8 @@
  */
 
 #include <algorithm>
+#include <chrono>
+
 #include "sampen_calculator.h"
 #include "random_sampler.h"
 
@@ -55,19 +57,19 @@ vector<long long> sampen_calculator_hg::_compute_AB(
     const vector<int> &data, unsigned m, int r) 
 {
     AB_calculator_point_d ABc;
-    struct timespec tstart, tend;
-    double interval = 0;
-
-    const auto N = data.size();
-
-    clock_gettime(CLOCK_REALTIME, &tstart);
 
     vector<Point> points = get_points(data, m + 1);
     int max_data = *std::max_element(data.cbegin(), data.cend());
     int min_data = *std::min_element(data.cbegin(), data.cend());
+
+    auto start = std::chrono::system_clock::now();
     vector<vector<Point> > vec_points = sample_hist(
         points, r, max_data, min_data, _sample_rate);
+    auto end = std::chrono::system_clock::now();
 
+    std::chrono::duration<double> interval = end - start;
+    std::cout << "Time consumed in sample_hist: ";
+    std::cout << interval.count() << "s" << std::endl;
     vector<long long> ABs(2, 0);
 
     for (unsigned i = 0; i < vec_points.size(); i++)
@@ -77,10 +79,6 @@ vector<long long> sampen_calculator_hg::_compute_AB(
         ABs[0] += AB[0];
         ABs[1] += AB[1];
     }
-
-    clock_gettime(CLOCK_REALTIME, &tend);
-    interval = (double)(tend.tv_sec - tstart.tv_sec);
-    interval += (double)(tend.tv_nsec - tstart.tv_nsec) / 1e9;
 
     return ABs;
 }
@@ -96,8 +94,7 @@ vector<long long> AB_calculator_point_d::compute_AB(
     long long A = 0;
     long long B = 0;
     unsigned m = points[0].dim() - 1;
-    unsigned N = points.size() + m - 1;
-    for (unsigned i = 0; i < points.size(); i++) 
+    for (unsigned i = 0; i < points.size(); i++)
     {
         for (unsigned j = i + 1; j < points.size(); j++)
         {
