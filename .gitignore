@@ -34,3 +34,7 @@
 .vscode
 *.log
 build
+
+._*
+build_linux
+xcode

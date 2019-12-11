@@ -77,6 +77,21 @@ private:
         const vector<int> &data, unsigned m, int r) override;
 };
 
+class sampen_calculator_kd: public sampen_calculator
+{
+private:
+    virtual vector<long long> _compute_AB(
+        const vector<int> &data, unsigned m, int r) override;
+};
+
+// Compute sample entropy by kd tree divided according to grid
+class sampen_calculator_kdg: public sampen_calculator
+{
+private:
+    virtual vector<long long> _compute_AB(
+        const vector<int> &data, unsigned m, int r) override;
+};
+
 class sampen_calculator_qr : public sampen_calculator
 {
 public:

@@ -1,0 +1,358 @@
+./build/bin/sampen -m 2 -r 30 ./data/141571001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/141571001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 100
+time: 0.000398461s
+Direct: SampEn(2, 30, 100) = 0.19283
+time: 0.000104409s
+Quasi-random: SampEn(2, 30, 100) = 0.249216
+Error (Quasi-random) = 0.292415
+time: 0.000478225s
+kd tree: SampEn(2, 30, 100) = 0.19283
+time: 0.000941138s
+kd tree (grid): SampEn(2, 30, 100) = 0.19283
+time: 0.00312951s
+Range Tree: SampEn(2, 30, 100) = 0.19283
+Time consumed in sample_hist: 0.0320921s
+time: 0.032238s
+Hhistogram: SampEn(2, 30, 100) = 0.162519
+Error (histogram) = -0.157189
+./build/bin/sampen -m 2 -r 30 ./data/141573001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/141573001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 300
+time: 0.00399196s
+Direct: SampEn(2, 30, 300) = 0.155326
+time: 0.000812621s
+Quasi-random: SampEn(2, 30, 300) = 0.163589
+Error (Quasi-random) = 0.0531959
+time: 0.00306373s
+kd tree: SampEn(2, 30, 300) = 0.155326
+time: 0.00354361s
+kd tree (grid): SampEn(2, 30, 300) = 0.155326
+time: 0.0111951s
+Range Tree: SampEn(2, 30, 300) = 0.155326
+Time consumed in sample_hist: 0.0736025s
+time: 0.0741822s
+Hhistogram: SampEn(2, 30, 300) = 0.162577
+Error (histogram) = 0.0466804
+./build/bin/sampen -m 2 -r 30 ./data/141575001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/141575001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 500
+time: 0.0107492s
+Direct: SampEn(2, 30, 500) = 0.169049
+time: 0.00127572s
+Quasi-random: SampEn(2, 30, 500) = 0.199724
+Error (Quasi-random) = 0.181454
+time: 0.0039096s
+kd tree: SampEn(2, 30, 500) = 0.169049
+time: 0.00688211s
+kd tree (grid): SampEn(2, 30, 500) = 0.169049
+time: 0.0221769s
+Range Tree: SampEn(2, 30, 500) = 0.169049
+Time consumed in sample_hist: 0.135113s
+time: 0.135888s
+Hhistogram: SampEn(2, 30, 500) = 0.189974
+Error (histogram) = 0.123777
+./build/bin/sampen -m 2 -r 30 ./data/141577001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/141577001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 700
+time: 0.0202093s
+Direct: SampEn(2, 30, 700) = 0.167132
+time: 0.00225473s
+Quasi-random: SampEn(2, 30, 700) = 0.184496
+Error (Quasi-random) = 0.103897
+time: 0.00601158s
+kd tree: SampEn(2, 30, 700) = 0.167132
+time: 0.0096111s
+kd tree (grid): SampEn(2, 30, 700) = 0.167132
+time: 0.0273614s
+Range Tree: SampEn(2, 30, 700) = 0.167132
+Time consumed in sample_hist: 0.167536s
+time: 0.16878s
+Hhistogram: SampEn(2, 30, 700) = 0.176589
+Error (histogram) = 0.0565863
+./build/bin/sampen -m 2 -r 30 ./data/141579001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/141579001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 900
+time: 0.0319895s
+Direct: SampEn(2, 30, 900) = 0.160233
+time: 0.00343879s
+Quasi-random: SampEn(2, 30, 900) = 0.172352
+Error (Quasi-random) = 0.0756338
+time: 0.00753708s
+kd tree: SampEn(2, 30, 900) = 0.160233
+time: 0.0125051s
+kd tree (grid): SampEn(2, 30, 900) = 0.160233
+time: 0.0360857s
+Range Tree: SampEn(2, 30, 900) = 0.160233
+Time consumed in sample_hist: 0.251158s
+time: 0.253326s
+Hhistogram: SampEn(2, 30, 900) = 0.16017
+Error (histogram) = -0.000394219
+./build/bin/sampen -m 2 -r 30 ./data/1415710001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/1415710001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 1000
+time: 0.0217919s
+Direct: SampEn(2, 30, 1000) = 0.149253
+time: 0.00268733s
+Quasi-random: SampEn(2, 30, 1000) = 0.158753
+Error (Quasi-random) = 0.063651
+time: 0.00567955s
+kd tree: SampEn(2, 30, 1000) = 0.149253
+time: 0.00994271s
+kd tree (grid): SampEn(2, 30, 1000) = 0.149253
+time: 0.0316729s
+Range Tree: SampEn(2, 30, 1000) = 0.149253
+Time consumed in sample_hist: 0.269828s
+time: 0.271778s
+Hhistogram: SampEn(2, 30, 1000) = 0.154059
+Error (histogram) = 0.0322005
+./build/bin/sampen -m 2 -r 30 ./data/1415730001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/1415730001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 3000
+time: 0.146493s
+Direct: SampEn(2, 30, 3000) = 0.127351
+time: 0.0183679s
+Quasi-random: SampEn(2, 30, 3000) = 0.127805
+Error (Quasi-random) = 0.00356226
+time: 0.0230934s
+kd tree: SampEn(2, 30, 3000) = 0.127351
+time: 0.0384825s
+kd tree (grid): SampEn(2, 30, 3000) = 0.127351
+time: 0.0967526s
+Range Tree: SampEn(2, 30, 3000) = 0.127351
+Time consumed in sample_hist: 1.63124s
+time: 1.64508s
+Hhistogram: SampEn(2, 30, 3000) = 0.127147
+Error (histogram) = -0.00160079
+./build/bin/sampen -m 2 -r 30 ./data/1415750001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/1415750001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 5000
+time: 0.42193s
+Direct: SampEn(2, 30, 5000) = 0.120824
+time: 0.0497909s
+Quasi-random: SampEn(2, 30, 5000) = 0.118597
+Error (Quasi-random) = -0.0184313
+time: 0.0546856s
+kd tree: SampEn(2, 30, 5000) = 0.120824
+time: 0.0803244s
+kd tree (grid): SampEn(2, 30, 5000) = 0.120824
+time: 0.183815s
+Range Tree: SampEn(2, 30, 5000) = 0.120824
+Time consumed in sample_hist: 2.69244s
+time: 2.72998s
+Hhistogram: SampEn(2, 30, 5000) = 0.120988
+Error (histogram) = 0.00135897
+./build/bin/sampen -m 2 -r 30 ./data/1415770001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/1415770001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 7000
+time: 0.817781s
+Direct: SampEn(2, 30, 7000) = 0.112551
+time: 0.090943s
+Quasi-random: SampEn(2, 30, 7000) = 0.113166
+Error (Quasi-random) = 0.00546322
+time: 0.0936344s
+kd tree: SampEn(2, 30, 7000) = 0.112551
+time: 0.121802s
+kd tree (grid): SampEn(2, 30, 7000) = 0.112551
+time: 0.255297s
+Range Tree: SampEn(2, 30, 7000) = 0.112551
+Time consumed in sample_hist: 3.72442s
+time: 3.80562s
+Hhistogram: SampEn(2, 30, 7000) = 0.113156
+Error (histogram) = 0.00537322
+./build/bin/sampen -m 2 -r 30 ./data/1415790001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/1415790001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 9000
+time: 1.69661s
+Direct: SampEn(2, 30, 9000) = 0.10638
+time: 0.150178s
+Quasi-random: SampEn(2, 30, 9000) = 0.108648
+Error (Quasi-random) = 0.0213175
+time: 0.142079s
+kd tree: SampEn(2, 30, 9000) = 0.10638
+time: 0.190633s
+kd tree (grid): SampEn(2, 30, 9000) = 0.10638
+time: 0.29573s
+Range Tree: SampEn(2, 30, 9000) = 0.10638
+Time consumed in sample_hist: 4.95139s
+time: 5.07314s
+Hhistogram: SampEn(2, 30, 9000) = 0.106579
+Error (histogram) = 0.00187654
+./build/bin/sampen -m 2 -r 30 ./data/14157100001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/14157100001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 10000
+time: 1.84221s
+Direct: SampEn(2, 30, 10000) = 0.104153
+time: 0.188358s
+Quasi-random: SampEn(2, 30, 10000) = 0.104135
+Error (Quasi-random) = -0.000175664
+time: 0.153023s
+kd tree: SampEn(2, 30, 10000) = 0.104153
+time: 0.194615s
+kd tree (grid): SampEn(2, 30, 10000) = 0.104153
+time: 0.349203s
+Range Tree: SampEn(2, 30, 10000) = 0.104153
+Time consumed in sample_hist: 5.29653s
+time: 5.44847s
+Hhistogram: SampEn(2, 30, 10000) = 0.103904
+Error (histogram) = -0.00239253
+./build/bin/sampen -m 2 -r 30 ./data/14157300001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/14157300001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 30000
+time: 14.8853s
+Direct: SampEn(2, 30, 30000) = 0.102455
+time: 1.71961s
+Quasi-random: SampEn(2, 30, 30000) = 0.103184
+Error (Quasi-random) = 0.00711534
+time: 0.993259s
+kd tree: SampEn(2, 30, 30000) = 0.102455
+time: 1.01299s
+kd tree (grid): SampEn(2, 30, 30000) = 0.102455
+time: 1.08901s
+Range Tree: SampEn(2, 30, 30000) = 0.102455
+Time consumed in sample_hist: 16.1335s
+time: 17.5209s
+Hhistogram: SampEn(2, 30, 30000) = 0.102469
+Error (histogram) = 0.000136181
+./build/bin/sampen -m 2 -r 30 ./data/14157500001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/14157500001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 50000
+time: 41.6578s
+Direct: SampEn(2, 30, 50000) = 0.113264
+time: 4.79245s
+Quasi-random: SampEn(2, 30, 50000) = 0.112836
+Error (Quasi-random) = -0.00377962
+time: 2.64044s
+kd tree: SampEn(2, 30, 50000) = 0.113264
+time: 2.68066s
+kd tree (grid): SampEn(2, 30, 50000) = 0.113264
+time: 2.22667s
+Range Tree: SampEn(2, 30, 50000) = 0.113264
+Time consumed in sample_hist: 29.0721s
+time: 32.9741s
+Hhistogram: SampEn(2, 30, 50000) = 0.113331
+Error (histogram) = 0.00058832
+./build/bin/sampen -m 2 -r 30 ./data/14157700001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/14157700001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 70000
+time: 79.4531s
+Direct: SampEn(2, 30, 70000) = 0.119368
+time: 9.14091s
+Quasi-random: SampEn(2, 30, 70000) = 0.119074
+Error (Quasi-random) = -0.00245891
+time: 4.69547s
+kd tree: SampEn(2, 30, 70000) = 0.119368
+time: 4.68674s
+kd tree (grid): SampEn(2, 30, 70000) = 0.119368
+time: 3.62708s
+Range Tree: SampEn(2, 30, 70000) = 0.119368
+Time consumed in sample_hist: 40.4476s
+time: 48.2365s
+Hhistogram: SampEn(2, 30, 70000) = 0.119396
+Error (histogram) = 0.000232026
+./build/bin/sampen -m 2 -r 30 ./data/14157900001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/14157900001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 90000
+time: 131.168s
+Direct: SampEn(2, 30, 90000) = 0.113413
+time: 15.0073s
+Quasi-random: SampEn(2, 30, 90000) = 0.112777
+Error (Quasi-random) = -0.00560531
+time: 6.73746s
+kd tree: SampEn(2, 30, 90000) = 0.113413
+time: 6.65404s
+kd tree (grid): SampEn(2, 30, 90000) = 0.113413
+time: 4.79688s
+Range Tree: SampEn(2, 30, 90000) = 0.113413
+Time consumed in sample_hist: 58.8178s
+time: 72.1347s
+Hhistogram: SampEn(2, 30, 90000) = 0.113394
+Error (histogram) = -0.000169207
+./build/bin/sampen -m 2 -r 30 ./data/141571000001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/141571000001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 100000
+time: 162.497s
+Direct: SampEn(2, 30, 100000) = 0.111772
+time: 18.5853s
+Quasi-random: SampEn(2, 30, 100000) = 0.112356
+Error (Quasi-random) = 0.00522868

@@ -1,11 +1,13 @@
 set(CMAKE_CXX_STANDARD 11)
 
 set(EXECUTABLE_SRC_LIST sampen.cpp)
-set(HEAD_SRC_LIST entropy.h random_sampler.h RangeTree2.h sampen_calculator.h utils.h)
-set(LIB_SRC_LIST random_sampler.cpp utils.cpp sampen_calculator.cpp)
+set(HEAD_SRC_LIST entropy.h random_sampler.h RangeTree2.h sampen_calculator.h utils.h kdtree.h)
+set(LIB_SRC_LIST random_sampler.cpp utils.cpp sampen_calculator.cpp kdtree.cpp)
 
 set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g")
 set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O3")
+
+message(STATUS ${CMAKE_BUILD_TYPE})
 
 include_directories($ENV{HOME}/local/include)
 link_directories($ENV{HOME}/local/lib)

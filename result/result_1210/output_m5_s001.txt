@@ -220,3 +220,12 @@ Direct: SampEn(5, 30, 100000) = 0.0822727
 time: 3.3659s
 Quasi-random: SampEn(5, 30, 100000) = 0.0824811
 Error (Quasi-random) = 0.00253278
+time: 368.388s
+Range Tree: SampEn(5, 30, 100000) = 0.0822727
+0.01
+./build/bin/sampen	_stat.filename: ./data/141573000001.txt
+	_stat.m: 5
+	_stat.r: 30
+	_stat.s: 0.01
+	_stat.t: 0
+	data length: 300000

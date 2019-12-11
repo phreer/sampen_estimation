@@ -21,7 +21,6 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-
 namespace RT = RangeTree;
 
 struct stat {
@@ -34,6 +33,10 @@ struct stat {
 
 double calculate_sampen_direct(const vector<int> &data, unsigned m, int r);
 double calculate_sampen_rangetree(
+    const vector<int> &data, unsigned m, int r);
+double calculate_sampen_kdtree(
+    const vector<int> &data, unsigned m, int r);
+double calculate_sampen_kdtree_grid(
     const vector<int> &data, unsigned m, int r);
 double calculate_sampen_rangetree_random(
     const vector<int> &data, unsigned m, int r, 
@@ -83,51 +86,75 @@ int main(int argc, char *argv[]) {
     double error = (result_random - result) / result;
     cout << "Error (Quasi-random) = " << error << endl;
 
+    // Compute sample entropy by kd tree
+    result = calculate_sampen_kdtree(data, _stat.m, _stat.r);
+    cout << "kd tree: SampEn(" << _stat.m << ", " << _stat.r << ", ";
+    cout << N << ") = " << result << endl;
+
+    // Compute sample entropy by kd tree (grid)
+    result = calculate_sampen_kdtree_grid(data, _stat.m, _stat.r);
+    cout << "kd tree (grid): SampEn(" << _stat.m << ", " << _stat.r << ", ";
+    cout << N << ") = " << result << endl;
+
     // Compute sample entropy by range tree
     result = calculate_sampen_rangetree(data, _stat.m, _stat.r);
     cout << "Range Tree: SampEn(" << _stat.m << ", " << _stat.r << ", ";
     cout << N << ") = " << result << endl;
 
     // Compute sample entropy by sampling according to histogram
-    // double result_histogram = calculate_sampen_rangetree_hist(
-    //     data, _stat.m, _stat.r, 0.1);
-    // cout << "Hhistogram: SampEn("; 
-    // cout << _stat.m << ", " << _stat.r << ", ";
-    // cout << N << ") = " << result_histogram << endl;
+    double result_histogram = calculate_sampen_rangetree_hist(
+        data, _stat.m, _stat.r, 0.1);
+    cout << "Hhistogram: SampEn("; 
+    cout << _stat.m << ", " << _stat.r << ", ";
+    cout << N << ") = " << result_histogram << endl;
 
-    // error = (result_histogram - result) / result;
-    // cout << "Error (histogram) = " << error << endl;
+    error = (result_histogram - result) / result;
+    cout << "Error (histogram) = " << error << endl;
 
     return 0;
 }
 
-double calculate_sampen_direct(const vector<int> &data, unsigned m, int r)
+double calculate_sampen_direct(
+    const vector<int> &data, unsigned m, int r)
 {
     sampen_calculator_d sc;
     return sc.compute_entropy(data, m, r);
 }
 
 double calculate_sampen_rangetree(
-    const vector<int> &data, const unsigned m, const int r)
+    const vector<int> &data, unsigned m, int r)
 {
-    sampen_calculator_rt scrt;
-    return scrt.compute_entropy(data, m, r);
+    sampen_calculator_rt sc;
+    return sc.compute_entropy(data, m, r);
+}
+
+double calculate_sampen_kdtree(
+    const vector<int> &data, unsigned m, int r) 
+{
+    sampen_calculator_kd sc;
+    return sc.compute_entropy(data, m, r);
+}
+double calculate_sampen_kdtree_grid(
+    const vector<int> &data, unsigned m, int r) 
+{
+    sampen_calculator_kdg sc;
+    return sc.compute_entropy(data, m, r);
 }
 
 double calculate_sampen_rangetree_random(
     const vector<int> &data, const unsigned m, const int r, 
     const unsigned sample_size, const unsigned sample_num) 
 {
-    sampen_calculator_qr scqr(sample_num, sample_size);
-    return scqr.compute_entropy(data, m, r);
+    sampen_calculator_qr sc(sample_num, sample_size);
+    return sc.compute_entropy(data, m, r);
 }
 
 double calculate_sampen_rangetree_hist(
     const vector<int> &data, const unsigned m, 
     const int r, double sample_rate)
 {
-    sampen_calculator_hg schg(sample_rate);
-    return schg.compute_entropy(data, m, r);
+    sampen_calculator_hg sc(sample_rate);
+    return sc.compute_entropy(data, m, r);
 }
 
 void phelp(char *arg0) 

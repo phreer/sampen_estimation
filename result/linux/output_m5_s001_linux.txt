@@ -1,0 +1,14 @@
+0.01
+./build/bin/sampen	_stat.filename: ./data/141571001.txt
+	_stat.m: 5
+	_stat.r: 30
+	_stat.s: 0.01
+	_stat.t: 0
+	data length: 100
+time: 0.00309791s
+Direct: SampEn(5, 30, 100) = 0.105597
+time: 0.000286003s
+Quasi-random: SampEn(5, 30, 100) = 0.0105821
+Error (Quasi-random) = -0.899788
+time: 0.0195353s
+Range Tree: SampEn(5, 30, 100) = 0.105597

@@ -7,9 +7,13 @@
 
 #include <algorithm>
 #include <chrono>
+#include <string.h>
+#include <math.h>
 
 #include "sampen_calculator.h"
 #include "random_sampler.h"
+#include "kdtree.h"
+
 
 vector<long long> sampen_calculator_d::_compute_AB(
     const vector<int> &data, unsigned m, int r)
@@ -83,6 +87,76 @@ vector<long long> sampen_calculator_hg::_compute_AB(
     return ABs;
 }
 
+vector<long long> sampen_calculator_kd::_compute_AB(
+    const vector<int> &data, unsigned m, int r) 
+{
+    long long A = 0, B = 0;
+    unsigned N = data.size();
+	unsigned n = N - m + 1;
+
+    vector<int> __data = vector<int>(data);
+
+    int **datap = (int **)malloc(n * sizeof(int *));
+
+    for (unsigned i = 0; i < n; i++)
+        datap[i] = __data.data() + i;
+
+	struct kdtree *treem = build_kdtree((const int **)datap, n - 1, m, 0, 0);
+    struct kdtree *treem1 = build_kdtree((const int **)datap, n - 1, m + 1, 0, 0);
+
+    for (unsigned i = 0; i < N - m; i++)
+    {
+        A += count_range_kdtree(treem, __data.data() + i, m, r);
+    }
+
+    for (unsigned i = 0; i < N - m; i++)
+    {
+        B += count_range_kdtree(treem1, __data.data() + i, m + 1, r);
+    }
+
+    A -= (N - m);
+    B -= (N - m);
+
+    vector<long long> result(2);
+    result[0] = A;
+    result[1] = B;
+    return result;
+}
+
+vector<long long> sampen_calculator_kdg::_compute_AB(
+    const vector<int> &data, unsigned m, int r) 
+{
+
+    long long A = 0, B = 0;
+    unsigned N = data.size();
+
+    int max_ = *std::max_element(data.cbegin(), data.cend());
+    int min_ = *std::min_element(data.cbegin(), data.cend());
+    double diff = static_cast<double>(max_ - min_);
+    unsigned p = static_cast<unsigned>(ceil(log2(diff)));
+    struct kdtree *treem = build_kdtree_grid(data.data(), N - 1, m, p);
+    struct kdtree *treem1 = build_kdtree_grid(data.data(), N, m + 1, p);
+
+    for (unsigned i = 0; i < N - m; i++)
+    {
+        A += count_range_kdtree(treem, data.data() + i, m, r);
+    }
+
+    for (unsigned i = 0; i < N - m; i++)
+    {
+        B += count_range_kdtree(treem1, data.data() + i, m + 1, r);
+    }
+
+    A -= (N - m);
+    B -= (N - m);
+
+    vector<long long> result(2);
+    result[0] = A;
+    result[1] = B;
+    return result;
+}
+
+
 // compute A and B with points using direct method
 // TODO: this part can be parallelized
 vector<long long> AB_calculator_point_d::compute_AB(
@@ -111,6 +185,7 @@ vector<long long> AB_calculator_point_d::compute_AB(
     result[1] = B;
     return result;
 }
+
 
 long long count_range_point_rt(const vector<Point> &points, 
                                const unsigned m, const int r)
