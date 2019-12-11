@@ -20,8 +20,9 @@ class uniform_int_generator
 {
 public:
     enum random_type {PSEUDO, QUASI, SHUFFLE};
-    uniform_int_generator(int _rangel, int _ranger, random_type _rtype): 
-            rangel(_rangel), ranger(_ranger), rtype(_rtype)
+    uniform_int_generator(
+        int _rangel, int _ranger, random_type _rtype, bool _random = false): 
+            rangel(_rangel), ranger(_ranger), rtype(_rtype), random(_random)
     {
         init_state();
     }
@@ -33,7 +34,7 @@ private:
     std::default_random_engine eng;
     gsl_qrng *qrng;
     int sample;
-
+    bool random; // whether to set random seed 
     void init_state();
 };
 
@@ -53,7 +54,7 @@ vector<Point> get_points(const vector<int> &data, unsigned m);
  * @return a vector of vectors of Points
  */
 vector<vector<Point> > sample_hist(const vector<Point> &vec, int r, 
-                                  int max_data, int min_data, 
-                                  double sample_rate);
+                                   int max_data, int min_data, 
+                                   double sample_rate);
 
 #endif // __RANDOM_SAMPLER_H__

@@ -1,4 +1,6 @@
 #include <iostream>
+#include <algorithm>
+
 #include <string.h>
 #include <limits.h>
 #include "utils.h"
@@ -65,4 +67,19 @@ int *readdata(char *filenm, unsigned long *filelen)
 	*filelen = npts;
 	for (i = 0; i < *filelen; i++) data[i] -= minval;
 	return data;
+}
+
+string ArgumentParser::getArg(const string &arg) 
+{
+	auto iter = std::find(arg_list.cbegin(), arg_list.cend(), arg);
+	if (iter != arg_list.cend() && ++iter != arg_list.cend()) 
+	{
+		return *iter;
+	}
+	else return string("");
+}
+
+bool ArgumentParser::isOption(const string &opt) 
+{
+	return find(arg_list.cbegin(), arg_list.cend(), opt) != arg_list.cend();
 }

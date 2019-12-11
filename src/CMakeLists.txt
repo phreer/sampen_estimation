@@ -1,6 +1,7 @@
 set(CMAKE_CXX_STANDARD 11)
 
-set(EXECUTABLE_SRC_LIST sampen.cpp)
+set(EXECUTABLE_SRC_MAIN sampen.cpp)
+set(EXECUTABLE_SRC_VAR sampen_var.cpp)
 set(HEAD_SRC_LIST entropy.h random_sampler.h RangeTree2.h sampen_calculator.h utils.h kdtree.h)
 set(LIB_SRC_LIST random_sampler.cpp utils.cpp sampen_calculator.cpp kdtree.cpp)
 
@@ -15,7 +16,10 @@ link_directories($ENV{HOME}/local/lib)
 add_library(libsampen SHARED ${LIB_SRC_LIST})
 set_target_properties(libsampen PROPERTIES OUTPUT_NAME "sampen")
 set_target_properties(libsampen PROPERTIES VERSION 1.0 SUBVERSION 1)
-
-add_executable(sampen ${EXECUTABLE_SRC_LIST})
-target_link_libraries(sampen libsampen)
 target_link_libraries(libsampen gsl gslcblas)
+
+add_executable(sampen ${EXECUTABLE_SRC_MAIN})
+target_link_libraries(sampen libsampen)
+
+add_executable(sampen_var ${EXECUTABLE_SRC_VAR})
+target_link_libraries(sampen_var libsampen)

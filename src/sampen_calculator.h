@@ -43,8 +43,8 @@ public:
         check_dim(data, m);
         return _compute_AB(data, m, r);
     }
-    double compute_entropy(const vector<int> &data,
-                           unsigned m, int r)
+    virtual double compute_entropy(const vector<int> &data,
+                                   unsigned m, int r)
     {
         auto start = std::chrono::system_clock::now();
         vector<long long> AB = compute_AB(data, m, r);
@@ -96,8 +96,9 @@ class sampen_calculator_qr : public sampen_calculator
 {
 public:
     explicit sampen_calculator_qr(
-        unsigned sample_num_, unsigned sample_size_)
-        : sample_num(sample_num_), sample_size(sample_size_) {}
+        unsigned sample_num_, unsigned sample_size_, bool random = false)
+        : sample_num(sample_num_), sample_size(sample_size_), random(random) 
+    {}
     void set_sample_num(unsigned sample_num_) { sample_num = sample_num_; }
     void set_sample_size(unsigned sample_size_)
     {
@@ -109,6 +110,7 @@ private:
                                           unsigned m, int r) override;
     unsigned sample_num;
     unsigned sample_size;
+    bool random;
 };
 
 /* 

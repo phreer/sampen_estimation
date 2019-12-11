@@ -356,3 +356,21 @@ Direct: SampEn(2, 30, 100000) = 0.111772
 time: 18.5853s
 Quasi-random: SampEn(2, 30, 100000) = 0.112356
 Error (Quasi-random) = 0.00522868
+time: 7.86868s
+kd tree: SampEn(2, 30, 100000) = 0.111772
+time: 7.39981s
+kd tree (grid): SampEn(2, 30, 100000) = 0.111772
+time: 5.23963s
+Range Tree: SampEn(2, 30, 100000) = 0.111772
+Time consumed in sample_hist: 65.2539s
+time: 81.2017s
+Hhistogram: SampEn(2, 30, 100000) = 0.11182
+Error (histogram) = 0.000433996
+./build/bin/sampen -m 2 -r 30 ./data/141573000001.txt
+0.1
+./build/bin/sampen	_stat.filename: ./data/141573000001.txt
+	_stat.m: 2
+	_stat.r: 30
+	_stat.s: 0.1
+	_stat.t: 0
+	data length: 300000

@@ -36,7 +36,7 @@ vector<long long> sampen_calculator_qr::_compute_AB(
 {
     vector<Point> sampled_points(sample_size);
     uniform_int_generator uig(
-        0, data.size() - 1, uniform_int_generator::QUASI);
+        0, data.size() - 1, uniform_int_generator::QUASI, random);
     AB_calculator_point_d ABc;
 
     vector<long long> AB(2);

@@ -5,6 +5,7 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <random>
 
 #include <gsl/gsl_qrng.h>
 
@@ -52,12 +53,25 @@ void uniform_int_generator::init_state()
     else if (rtype == QUASI) 
     {
         qrng = gsl_qrng_alloc(gsl_qrng_sobol, 1);
+        if (random) 
+        {
+            std::random_device rd;
+            std::mt19937 rng(rd());
+            std::uniform_int_distribution<unsigned> uid;
+            unsigned s = uid(rng) % 2048;
+            double t;
+            while (s--) 
+            {
+                gsl_qrng_get(qrng, &t);
+            }
+        }
     }
     else if (rtype == SHUFFLE)
     {
         throw std::runtime_error("SHUFFULE not implemented.");
     }
 }
+
 
 int uniform_int_generator::get() 
 {
@@ -71,6 +85,9 @@ int uniform_int_generator::get()
         double v;
         gsl_qrng_get(qrng, &v);
         sample = static_cast<int>(v * (ranger - rangel) + rangel);
+        break;
+    case SHUFFLE:
+        throw std::runtime_error("SHUFFULE not implemented.");
         break;
     }
     return sample;
