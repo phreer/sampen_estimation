@@ -38,3 +38,4 @@ build
 ._*
 build_linux
 xcode
+result/Instruments.trace
