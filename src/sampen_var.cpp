@@ -1,3 +1,11 @@
+/* file: sampen_var.cpp
+ * date: 2020-02-10
+ * author: phree
+ *
+ * description: This program is used to measure the variance of the 
+ *   errors of the entropies computed by sampling method.
+ */
+
 #include <iostream>
 #include <vector>
 #include <algorithm>

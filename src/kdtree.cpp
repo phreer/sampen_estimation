@@ -1,8 +1,83 @@
+#include <iostream>
+
 #include <string.h>
 #include "utils.h"
 #include "kdtree.h"
+#include "random_sampler.h"
 
-// Some utility functions
+void KDTreeNode::BuildKDTreeNode_(unsigned dim, unsigned max_level)
+{
+    vector<Point *> point_ptrs(point_ptrs_);
+    unsigned k = level_ % dim;
+    unsigned level = level_ + 1;
+    bool is_leaf = (level == max_level);
+    std::sort(point_ptrs.begin(), point_ptrs.end(), 
+        [k] (const Point *p1, const Point *p2) 
+        {
+            return (*p1)[k] < (*p2)[k];
+        });
+    unsigned mid = point_ptrs.size() / 2;
+    
+    vector<int> ranges(ranges_);
+    ranges[2 * k] = (*point_ptrs[0])[k];
+    ranges[2 * k + 1] = (*point_ptrs[mid - 1])[k];
+    lc_ = std::make_shared<KDTreeNode>(
+        vector<Point *>(point_ptrs.cbegin(), point_ptrs.cbegin() + mid), 
+        ranges, is_leaf, level, dim, max_level);
+    
+    ranges[2 * k] = (*point_ptrs[mid])[k];
+    ranges[2 * k + 1] = (*point_ptrs[point_ptrs.size() - 1])[k];
+    rc_ = std::make_shared<KDTreeNode>(
+        vector<Point *>(point_ptrs.cbegin() + mid, point_ptrs.cend()), 
+        ranges, is_leaf, level, dim, max_level);
+}
+
+void KDTreeNode::GetLeafNodePtrs_(
+    vector<shared_ptr<KDTreeNode> > &node_ptrs) const
+{
+    if (lc_->is_leaf()) node_ptrs.push_back(lc_);
+    else lc_->GetLeafNodePtrs_(node_ptrs);
+    if (rc_->is_leaf()) node_ptrs.push_back(rc_);
+    else rc_->GetLeafNodePtrs_(node_ptrs);
+}
+
+void NewKDTree::BuildKDTree_(unsigned max_level) 
+{
+    vector<int> ranges(2 * dim_);
+    for (int i = 0; i < dim_; i++) 
+    {
+        ranges[2 * i] = std::min_element(points_.cbegin(), points_.cend(), 
+            [i] (const Point &p1, const Point &p2) { 
+                return p1[i] < p2[i]; 
+            })->operator[](i);
+        ranges[2 * i + 1] = std::max_element(points_.cbegin(), points_.cend(), 
+            [i] (const Point &p1, const Point &p2) { 
+                return p1[i] < p2[i]; 
+            })->operator[](i);
+    }
+    vector<Point *> point_ptrs(points_.size());
+    for (int i = 0; i < point_ptrs.size(); i++) 
+    point_ptrs[i] = &points_[i];
+    bool is_leaf = (max_level == 0);
+    root_ = KDTreeNode(point_ptrs, ranges, is_leaf, 0, dim_, max_level);
+    node_ptrs_ = root_.GetLeafNodePtrs();
+}
+
+vector<Point> NewKDTree::Sample(unsigned sample_size) 
+{
+    if (sample_size != node_ptrs_.size()) 
+    throw std::logic_error("sample_size != node_ptrs_.size()");
+    vector<Point> result(sample_size);
+    uniform_int_generator uig(0, node_ptrs_[0]->count() - 1, 
+        uniform_int_generator::PSEUDO, true);
+    for (int i = 0; i < sample_size; i++) 
+    {
+        result[i] = *(node_ptrs_[i]->point_ptrs()[uig.get()]);
+    }
+    return result;
+}
+
+/* Some utility functions */
 int _compar_int(const void *p1, const void *p2)
 {
     return *(int *)p1 - *(int *)p2;
@@ -52,13 +127,13 @@ void* _get_max_min(void **numsp, unsigned long N,
 /*
  * create a kd tree divided by data points
  * Arguments:
- * int **data: an array of pointers to int *
- * unsigned long n: the number of the pointers to int *
- * unsigned m: the length of template
- * unsigned dim: the current discrimiant
- * unsigned level: level of the kd tree node being created
+ *     int **data: an array of pointers to int *
+ *     unsigned long n: the number of the pointers to int *
+ *     unsigned m: the length of template
+ *     unsigned dim: the current discrimiant
+ *     unsigned level: level of the kd tree node being created
  * Returns:
- * a point ter to the built kd tree
+ *     a point ter to the built kd tree
  */
 struct kdtree *build_kdtree(const int **data, unsigned long n,
                            unsigned m, unsigned dim,

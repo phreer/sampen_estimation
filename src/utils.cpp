@@ -19,6 +19,24 @@ vector<Point> get_points(const vector<int> &data, unsigned m)
     return result;
 }
 
+bool IsPowerTwo(unsigned n)
+{
+	if (n == 1) return true;
+	else if (n % 2 == 0) return IsPowerTwo(n / 2);
+	else return false;
+}
+
+double ComputeVarience(const vector<int> &data) 
+{
+	double avg = std::accumulate(data.cbegin(), data.cend(), 0) / data.size();
+	double sum = 0; 
+	std::for_each(data.cbegin(), data.cend(), [&sum, avg] (const int x) {
+		sum += (x - avg) * (x - avg);
+	});
+	sum /= data.size();
+	return sum;
+}
+
 int *readdata(char *filenm, unsigned long *filelen)
 {
 	FILE *ifile;

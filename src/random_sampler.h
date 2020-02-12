@@ -20,6 +20,10 @@ class uniform_int_generator
 {
 public:
     enum random_type {PSEUDO, QUASI, SHUFFLE};
+    /*
+     * @param _rangel: minimun value
+     * @param _ranger: maximum value 
+     */
     uniform_int_generator(
         int _rangel, int _ranger, random_type _rtype, bool _random = false): 
             rangel(_rangel), ranger(_ranger), rtype(_rtype), random(_random)
@@ -34,7 +38,8 @@ private:
     std::default_random_engine eng;
     gsl_qrng *qrng;
     int sample;
-    bool random; // whether to set random seed 
+    // Whether to set seed randomly.
+    bool random;
     void init_state();
 };
 

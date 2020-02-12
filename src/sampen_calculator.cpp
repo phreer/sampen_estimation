@@ -4,6 +4,7 @@
  *
  * description: implementation of sampen
  */
+#include <iostream>
 
 #include <algorithm>
 #include <chrono>
@@ -53,6 +54,30 @@ vector<long long> sampen_calculator_qr::_compute_AB(
         AB = ABc.compute_AB(sampled_points, r);
         ABs[0] += AB[0];
         ABs[1] += AB[1];
+    }
+    return ABs;
+}
+
+vector<long long> sampen_calculator_nkd::_compute_AB(
+    const vector<int> &data, unsigned m, int r) 
+{
+    uniform_int_generator uig(
+        0, data.size() - 1, uniform_int_generator::PSEUDO, random);
+    AB_calculator_point_d ABc;
+
+    vector<long long> AB(2);
+    vector<long long> ABs(2 * sample_num_, 0);
+    
+    auto max_level = static_cast<unsigned>(log2(sample_size_));
+    vector<Point> points = get_points(data, m + 1);
+    std::cout << "points.size(): " << points.size() << std::endl;
+    NewKDTree kdtree(points, m, max_level);
+    for (int i = 0; i < sample_num_; i++)
+    {
+        auto sampled_points = kdtree.Sample(sample_size_);
+        AB = ABc.compute_AB(sampled_points, r);
+        ABs[i * 2] = AB[0];
+        ABs[i * 2 + 1] = AB[1];
     }
     return ABs;
 }
@@ -191,19 +216,12 @@ long long count_range_point_rt(const vector<Point> &points,
                                const unsigned m, const int r)
 {
 	struct timespec tstart, tend;
-	double interval = 0, total = 0;
 
     /* build tree */
-  	clock_gettime(CLOCK_REALTIME, &tstart);
     RT::RangeTree<int, int> rtree(points);
     vector<int> lower(m, 0), upper(m, 0);
-	clock_gettime(CLOCK_REALTIME, &tend);
-	interval = (double)(tend.tv_sec - tstart.tv_sec);
-	interval += (double)(tend.tv_nsec - tstart.tv_nsec) / 1e9;
-	total += interval;
 
     /* counting */
-	clock_gettime(CLOCK_REALTIME, &tstart);
     long long result = 0;
     for (vector<int>::size_type i = 0; i < points.size(); i++)
     {
@@ -214,9 +232,6 @@ long long count_range_point_rt(const vector<Point> &points,
         }
         result += rtree.countInRange(lower, upper);
     }
-  	clock_gettime(CLOCK_REALTIME, &tend);
-	interval = (double)(tend.tv_sec - tstart.tv_sec);
-	interval += (double)(tend.tv_nsec - tstart.tv_nsec) / 1e9;
     return result;
 }
 

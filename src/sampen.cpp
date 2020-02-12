@@ -24,11 +24,11 @@ using std::endl;
 namespace RT = RangeTree;
 
 struct stat {
-    char *filename;
+    char filename[256];
     unsigned m;
     int r;
-    bool t;
-    double s; // sample_rate
+    unsigned sample_num;
+    unsigned sample_size;
 } _stat;
 
 double calculate_sampen_direct(const vector<int> &data, unsigned m, int r);
@@ -43,29 +43,31 @@ double calculate_sampen_rangetree_random(
     unsigned sample_size, unsigned sample_num);
 double calculate_sampen_rangetree_hist(
     const vector<int> &data, unsigned m, int r, double sample_rate);
-
+double calculate_sampen_nkdtree_hist(
+    const vector<int> &data, unsigned m, int r, 
+    unsigned sample_num, unsigned sample_size);
 void phelp(char *arg0);
-void pargs(int argc, char *argv[]);
+void ParseArgs(int argc, char *argv[]);
 
 int main(int argc, char *argv[]) {
-    _stat.filename = NULL;
     _stat.m = 0;
     _stat.r = -1;
-    _stat.s = -1.;
-    _stat.t = false;
-    pargs(argc, argv);
+    _stat.sample_num = 0;
+    _stat.sample_size = 0;
+    ParseArgs(argc, argv);
 
     unsigned long N;
     int *_data = readdata(_stat.filename, &N);
     vector<int> data(_data, _data + N);
     free(_data);
+    for (int i = 0; i < _stat.m; i++) data.push_back(data.back());
 
     cout << argv[0];
     cout << "\t_stat.filename: " << _stat.filename << endl;
     cout << "\t_stat.m: " << _stat.m << endl;
     cout << "\t_stat.r: " << _stat.r << endl;
-    cout << "\t_stat.s: " << _stat.s << endl;
-    cout << "\t_stat.t: " << _stat.t << endl;
+    cout << "\t_stat.sample_num: " << _stat.sample_num << endl;
+    cout << "\t_stat.sample_size: " << _stat.sample_size << endl;
     cout << "\tdata length: " << N << endl;
 
     // Compute sample entropy by direct method
@@ -74,17 +76,22 @@ int main(int argc, char *argv[]) {
     cout << N << ") = " << result << endl;
 
     // Compute sample entropy by random sampling
-    double sample_rate = _stat.s;
-    unsigned sample_size = static_cast<unsigned>(N * sample_rate);
-    unsigned sample_num = static_cast<unsigned>(1 / sample_rate);
+    double sample_rate = static_cast<double>(_stat.sample_size) / N;
     double result_random = calculate_sampen_rangetree_random(
-        data, _stat.m, _stat.r, sample_size, sample_num);
+        data, _stat.m, _stat.r, _stat.sample_size, _stat.sample_num);
     cout << "Quasi-random: SampEn(" ;
     cout << _stat.m << ", " << _stat.r << ", ";
     cout << N << ") = " << result_random << endl;
 
     double error = (result_random - result) / result;
     cout << "Error (Quasi-random) = " << error << endl;
+
+    /* Compute sample entropy by sampling according to kd tree */
+    double result_hist = calculate_sampen_nkdtree_hist(data, _stat.m, _stat.r, 
+        _stat.sample_num, _stat.sample_size);
+    cout << "KD Tree Sampling: SampEn(";
+    cout << _stat.m << ", " << _stat.r << ", " << _stat.sample_num << ", ";
+    cout << _stat.sample_size << ") = " << result_hist << endl;
 
     // Compute sample entropy by kd tree
     result = calculate_sampen_kdtree(data, _stat.m, _stat.r);
@@ -102,15 +109,14 @@ int main(int argc, char *argv[]) {
     cout << N << ") = " << result << endl;
 
     // Compute sample entropy by sampling according to histogram
-    double result_histogram = calculate_sampen_rangetree_hist(
-        data, _stat.m, _stat.r, 0.1);
-    cout << "Hhistogram: SampEn("; 
-    cout << _stat.m << ", " << _stat.r << ", ";
-    cout << N << ") = " << result_histogram << endl;
+    // double result_hist = calculate_sampen_rangetree_hist(
+    //     data, _stat.m, _stat.r, 0.1);
+    // cout << "Histogram: SampEn("; 
+    // cout << _stat.m << ", " << _stat.r << ", ";
+    // cout << N << ") = " << result_hist << endl;
 
-    error = (result_histogram - result) / result;
-    cout << "Error (histogram) = " << error << endl;
-
+    // error = (result_hist - result) / result;
+    // cout << "Error (histogram) = " << error << endl;
     return 0;
 }
 
@@ -134,6 +140,15 @@ double calculate_sampen_kdtree(
     sampen_calculator_kd sc;
     return sc.compute_entropy(data, m, r);
 }
+
+double calculate_sampen_nkdtree_hist(
+    const vector<int> &data, unsigned m, int r, 
+    unsigned sample_size, unsigned sample_num) 
+{
+    sampen_calculator_nkd sc(sample_size, sample_num);
+    return sc.compute_entropy(data, m, r);
+}
+
 double calculate_sampen_kdtree_grid(
     const vector<int> &data, unsigned m, int r) 
 {
@@ -167,61 +182,30 @@ void phelp(char *arg0)
     exit(-1);
 }
 
-void pargs(int argc, char *argv[]) 
+void ParseArgs(int argc, char *argv[])
 {
-    if (argc < 1) phelp(argv[0]);
-    int i = 1;
-    while (i < argc) {
-        if (argv[i][0] != '-') {
-            if (_stat.filename) phelp(argv[0]);
-            _stat.filename = argv[i];
-            i++;
-            break;
-        }
+    ArgumentParser ap(argc, argv);
+    string arg;
+    arg = ap.getArg("-filename");
+    if (arg.size()) strcpy(_stat.filename, arg.c_str());
+    else throw std::invalid_argument(
+        "Please specify an input file with -filename FILENAME");
 
-        if (strlen(argv[i]) != 2) {
-            cerr << "unrecognized option " << argv[i] << endl;
-            phelp(argv[0]);
-        }
-        if (i + 1 >= argc) {
-            cerr << "argument of option " << argv[i] << " is missing" << endl;
-            phelp(argv[0]);
-        }
-        switch (argv[i][1]) {
-        case 'm':
-            if (_stat.m) {
-                cerr << "template length m has been set yet\n";
-                phelp(argv[0]);
-            }
-            _stat.m = (unsigned) atoi(argv[i+1]);
-            break;
-        case 'r':
-            if (_stat.r != -1) {
-                cerr << "tolerance r has been set yet\n";
-                phelp(argv[0]);
-            }
-            _stat.r = (unsigned) atoi(argv[i+1]);
-            break;
-        case 's':
-            if (_stat.s >= 0.) {
-                cerr << "sample_rate s has been set yet\n";
-                phelp(argv[0]);
-            }
-            _stat.s = atof(argv[i+1]);
-            break;
-        default:
-            cerr << "unrecognized option " << argv[i] << endl;
-            phelp(argv[0]);
-            break;
-        }
-        i = i + 2;
-    }
-    if (_stat.filename == NULL) {
-        cerr << "INPUT_FILENAME is required\n";
-        phelp(argv[0]);
-    }
-    if (_stat.m == 0) _stat.m = 3;
-    if (_stat.r == -1) _stat.r = 100;
-    if (_stat.s < 0) _stat.s = 0.1;
-    cout << _stat.s << endl;
+    arg = ap.getArg("-m");
+    if (arg.size()) _stat.m = std::stoi(arg);
+    else throw std::invalid_argument("Please specify m with -m M");
+
+    arg = ap.getArg("-r");
+    if (arg.size()) _stat.r = std::stoi(arg);
+    else _stat.r = 30;
+
+    arg = ap.getArg("-sample_num");
+    if (arg.size()) _stat.sample_num = std::stoi(arg);
+    else throw std::invalid_argument(
+        "Please specify a sample num with -sample_num SAMPLE_NUM");
+    
+    arg = ap.getArg("-sample_size");
+    if (arg.size()) _stat.sample_size = std::stoi(arg);
+    else throw std::invalid_argument(
+        "Please specify a sample num with -sample_size SAMPLE_SIZE");
 }

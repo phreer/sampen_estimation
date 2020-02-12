@@ -25,13 +25,14 @@ double compute_sampen(long long A, long long B, unsigned N, unsigned m)
         return -log(static_cast<double>(N - m - 1) / (N - m));
 }
 
+// base class to calculate sample entropy
 class sampen_calculator
 {
 private:
     void check_dim(const vector<int> &data, unsigned m)
     {
         if (data.size() <= m)
-            throw std::logic_error("data.size() < m");
+            throw std::invalid_argument("data.size() < m");
     }
     virtual vector<long long> _compute_AB(const vector<int> &data,
                                           unsigned m, int r) = 0;
@@ -51,18 +52,30 @@ public:
         auto end = std::chrono::system_clock::now();
         std::chrono::duration<double> interval = end - start;
         std::cout << "time: " << interval.count() << "s" << std::endl;
+        unsigned N = data.size();
+        unsigned sample_num = AB.size() / 2;
+        double result = 0;
 
-        long long A = AB[0];
-        long long B = AB[1];
+        long long A = 0;
+        long long B = 0;
+        for (unsigned i = 0; i < sample_num; i++)
+        {
+            A += AB[i * 2];
+            B += AB[i * 2 + 1];
+        }
+        result = compute_sampen(A, B, N, m);
 #ifdef DEBUG
         std::cout << "A is " << A << ", B is " << B << std::endl;
 #endif
-        unsigned N = data.size();
+        // for (unsigned i = 0; i < sample_num; i++) 
+        //     result += compute_sampen(AB[i * 2], AB[i * 2 + 1], N, m);
+        // result /= sample_num;
 
-        return compute_sampen(A, B, N, m);
+        return result;
     }
 };
 
+// direct method
 class sampen_calculator_d : public sampen_calculator
 {
 private:
@@ -70,6 +83,7 @@ private:
         const vector<int> &data, unsigned m, int r) override;
 };
 
+// range tree
 class sampen_calculator_rt : public sampen_calculator
 {
 private:
@@ -77,6 +91,7 @@ private:
         const vector<int> &data, unsigned m, int r) override;
 };
 
+// old kd tree
 class sampen_calculator_kd: public sampen_calculator
 {
 private:
@@ -92,6 +107,7 @@ private:
         const vector<int> &data, unsigned m, int r) override;
 };
 
+// quasi-random sampling
 class sampen_calculator_qr : public sampen_calculator
 {
 public:
@@ -113,9 +129,26 @@ private:
     bool random;
 };
 
-/* 
- * Compute sampen by sample using histogram
- */
+// Compute sample entropy using new kd tree
+// Here, we require sample_size = 2^n for some non-negative integer n
+class sampen_calculator_nkd : public sampen_calculator
+{
+public:
+    explicit sampen_calculator_nkd(
+        unsigned sample_num, unsigned sample_size)
+        : sample_num_(sample_num), sample_size_(sample_size) 
+        {
+            if (!IsPowerTwo(sample_size_)) 
+                throw std::invalid_argument("sample_size should be power of 2");
+        }
+private:
+    virtual vector<long long> _compute_AB(const vector<int> &data,
+                                          unsigned m, int r) override;
+    unsigned sample_num_;
+    unsigned sample_size_;
+};
+
+// Compute sampen by sample using histogram
 class sampen_calculator_hg : public sampen_calculator
 {
 private:
@@ -127,7 +160,7 @@ public:
     : _sample_rate(sample_rate_) {}
 };
 
-// Classes that compute A and B with vector of points
+// base class that compute A and B with vector of points
 class AB_calculator_point
 {
 public:
