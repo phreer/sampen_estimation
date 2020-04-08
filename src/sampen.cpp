@@ -15,6 +15,7 @@
 #include "utils.h"
 #include "RangeTree2.h"
 #include "sampen_calculator.h"
+#include "entropy_calculator.h"
 
 using std::vector;
 using std::cout;
@@ -32,6 +33,7 @@ struct stat {
 } _stat;
 
 double calculate_sampen_direct(const vector<int> &data, unsigned m, int r);
+double ComputeDynamicEntropy(const vector<int> &data, unsigned m, unsigned max_level);
 double calculate_sampen_rangetree(
     const vector<int> &data, unsigned m, int r);
 double calculate_sampen_kdtree(
@@ -83,8 +85,9 @@ int main(int argc, char *argv[]) {
     cout << _stat.m << ", " << _stat.r << ", ";
     cout << N << ") = " << result_random << endl;
 
-    double error = (result_random - result) / result;
-    cout << "Error (Quasi-random) = " << error << endl;
+    double error = result_random - result;
+    cout << "Error = " << error;
+    cout << ", Relative Error (Quasi-random) = " << error / result << endl;
 
     /* Compute sample entropy by sampling according to kd tree */
     double result_hist = calculate_sampen_nkdtree_hist(data, _stat.m, _stat.r, 
@@ -92,21 +95,24 @@ int main(int argc, char *argv[]) {
     cout << "KD Tree Sampling: SampEn(";
     cout << _stat.m << ", " << _stat.r << ", " << _stat.sample_num << ", ";
     cout << _stat.sample_size << ") = " << result_hist << endl;
+    error = result_hist - result;
+    cout << "Error = " << error;
+    cout << ", Relative Error (kd-tree histogram) = " << error / result << endl;
 
-    // Compute sample entropy by kd tree
-    result = calculate_sampen_kdtree(data, _stat.m, _stat.r);
-    cout << "kd tree: SampEn(" << _stat.m << ", " << _stat.r << ", ";
-    cout << N << ") = " << result << endl;
+    // // Compute sample entropy by kd tree
+    // result = calculate_sampen_kdtree(data, _stat.m, _stat.r);
+    // cout << "kd tree: SampEn(" << _stat.m << ", " << _stat.r << ", ";
+    // cout << N << ") = " << result << endl;
 
-    // Compute sample entropy by kd tree (grid)
-    result = calculate_sampen_kdtree_grid(data, _stat.m, _stat.r);
-    cout << "kd tree (grid): SampEn(" << _stat.m << ", " << _stat.r << ", ";
-    cout << N << ") = " << result << endl;
+    // // Compute sample entropy by kd tree (grid)
+    // result = calculate_sampen_kdtree_grid(data, _stat.m, _stat.r);
+    // cout << "kd tree (grid): SampEn(" << _stat.m << ", " << _stat.r << ", ";
+    // cout << N << ") = " << result << endl;
 
-    // Compute sample entropy by range tree
-    result = calculate_sampen_rangetree(data, _stat.m, _stat.r);
-    cout << "Range Tree: SampEn(" << _stat.m << ", " << _stat.r << ", ";
-    cout << N << ") = " << result << endl;
+    // // Compute sample entropy by range tree
+    // result = calculate_sampen_rangetree(data, _stat.m, _stat.r);
+    // cout << "Range Tree: SampEn(" << _stat.m << ", " << _stat.r << ", ";
+    // cout << N << ") = " << result << endl;
 
     // Compute sample entropy by sampling according to histogram
     // double result_hist = calculate_sampen_rangetree_hist(

@@ -32,15 +32,26 @@ public:
     const unsigned level() const { return level_; }
     const bool is_leaf() const { return is_leaf_; }
     const vector<Point *> point_ptrs() const { return point_ptrs_; }
-    vector<shared_ptr<KDTreeNode> > GetLeafNodePtrs() const 
+    vector<shared_ptr<const KDTreeNode> > GetLeafNodePtrs() const 
     {
-        vector<shared_ptr<KDTreeNode> > node_ptrs; 
+        vector<shared_ptr<const KDTreeNode> > node_ptrs; 
         GetLeafNodePtrs_(node_ptrs); 
         return node_ptrs;
     }
+    double get_volume() const 
+    {
+        double result = 1; 
+        for (unsigned i = 0; 2 * i < ranges_.size(); i++)
+        {
+            result *= (ranges_[2 * i] - ranges_[2 * i + 1]);
+        }
+        return result;
+    }
 private:
     void BuildKDTreeNode_(unsigned dim, unsigned max_level);
-    void GetLeafNodePtrs_(vector<shared_ptr<KDTreeNode> > &node_ptrs) const;
+    void GetLeafNodePtrs_(
+        vector<shared_ptr<const KDTreeNode> > &node_ptrs) const;
+    // Pointers to points in this node
     vector<Point *> point_ptrs_;
     bool is_leaf_;
     shared_ptr<KDTreeNode> lc_;
@@ -52,22 +63,34 @@ private:
 class NewKDTree 
 {
 public:
-    NewKDTree(const vector<Point> &points, unsigned dim, int max_level) :
-        points_(points), dim_(dim), node_ptrs_(static_cast<unsigned>(pow(
-            2, max_level)))
+    NewKDTree(const vector<Point> &points, unsigned max_level) :
+        points_(points), node_ptrs_(static_cast<unsigned>(pow(2, max_level)))
     {
         const unsigned N = points.size();
+        if (N == 0) 
+            throw std::invalid_argument("N == 0");
+        if (!IsPowerTwo(N))
+            throw std::invalid_argument("N should be a power of 2");
+        if (max_level == 0) 
+            throw std::invalid_argument("max_level == 0");
         if (pow(2, max_level) > N)
-            throw std::logic_error("2 ^ max_depth > N");
+            throw std::invalid_argument("2 ^ max_depth > N");
+        dim_ = points_[0].dim();
         BuildKDTree_(max_level);
     }
     vector<Point> Sample(unsigned sample_size);
+    vector<shared_ptr<const KDTreeNode> > get_node_ptrs() const 
+    {
+        return node_ptrs_;
+    }
 private:
     void BuildKDTree_(unsigned max_level);
     KDTreeNode root_;
-    // The number of leaf node pointers.
-    vector<shared_ptr<KDTreeNode> > node_ptrs_;
+    // The leaf node pointers
+    vector<shared_ptr<const KDTreeNode> > node_ptrs_;
+    // All data points
     vector<Point> points_;
+    // Dimemsion of the kd-tree, namely k in the kd-tree
     unsigned dim_;
 };
 

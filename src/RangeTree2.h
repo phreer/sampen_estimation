@@ -63,6 +63,7 @@ namespace RangeTree {
     class Point {
         static_assert(std::is_arithmetic<T>::value, "Type T must be numeric");
     private:
+        /* Coordinates of the point. */
         std::vector<T> vec;
         S val;
         int multiplicity;

@@ -33,7 +33,7 @@ void KDTreeNode::BuildKDTreeNode_(unsigned dim, unsigned max_level)
 }
 
 void KDTreeNode::GetLeafNodePtrs_(
-    vector<shared_ptr<KDTreeNode> > &node_ptrs) const
+    vector<shared_ptr<const KDTreeNode> > &node_ptrs) const
 {
     if (lc_->is_leaf()) node_ptrs.push_back(lc_);
     else lc_->GetLeafNodePtrs_(node_ptrs);
@@ -57,7 +57,7 @@ void NewKDTree::BuildKDTree_(unsigned max_level)
     }
     vector<Point *> point_ptrs(points_.size());
     for (int i = 0; i < point_ptrs.size(); i++) 
-    point_ptrs[i] = &points_[i];
+        point_ptrs[i] = &points_[i];
     bool is_leaf = (max_level == 0);
     root_ = KDTreeNode(point_ptrs, ranges, is_leaf, 0, dim_, max_level);
     node_ptrs_ = root_.GetLeafNodePtrs();
@@ -66,10 +66,10 @@ void NewKDTree::BuildKDTree_(unsigned max_level)
 vector<Point> NewKDTree::Sample(unsigned sample_size) 
 {
     if (sample_size != node_ptrs_.size()) 
-    throw std::logic_error("sample_size != node_ptrs_.size()");
+        throw std::invalid_argument("sample_size != node_ptrs_.size()");
     vector<Point> result(sample_size);
     uniform_int_generator uig(0, node_ptrs_[0]->count() - 1, 
-        uniform_int_generator::PSEUDO, true);
+        uniform_int_generator::QUASI, true);
     for (int i = 0; i < sample_size; i++) 
     {
         result[i] = *(node_ptrs_[i]->point_ptrs()[uig.get()]);

@@ -70,8 +70,7 @@ vector<long long> sampen_calculator_nkd::_compute_AB(
     
     auto max_level = static_cast<unsigned>(log2(sample_size_));
     vector<Point> points = get_points(data, m + 1);
-    std::cout << "points.size(): " << points.size() << std::endl;
-    NewKDTree kdtree(points, m, max_level);
+    NewKDTree kdtree(points, max_level);
     for (int i = 0; i < sample_num_; i++)
     {
         auto sampled_points = kdtree.Sample(sample_size_);
