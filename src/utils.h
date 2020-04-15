@@ -25,6 +25,9 @@ vector<Point> get_points(const vector<int> &data, unsigned m);
 
 bool IsPowerTwo(unsigned n);
 double ComputeVarience(const vector<int> &data);
+double ComputeSum(const vector<double> &data);
+double EclideanDistance(const Point &p1, const Point &p2);
+double L1Distance(const Point &p1, const Point &p2);
 
 class ArgumentParser
 {

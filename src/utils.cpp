@@ -28,13 +28,56 @@ bool IsPowerTwo(unsigned n)
 
 double ComputeVarience(const vector<int> &data) 
 {
-	double avg = std::accumulate(data.cbegin(), data.cend(), 0) / data.size();
-	double sum = 0; 
-	std::for_each(data.cbegin(), data.cend(), [&sum, avg] (const int x) {
-		sum += (x - avg) * (x - avg);
-	});
+	vector<double> data_(data.cbegin(), data.cend());
+	double avg = ComputeSum(data_) / data.size();
+	std::for_each(data_.begin(), data_.end(), [avg] (double &x) 
+		{ x -= avg; x *= x; });
+	double sum = ComputeSum(data_); 
 	sum /= data.size();
 	return sum;
+}
+
+double ComputeSum(const vector<double> &data)
+{
+	unsigned n0 = 1 << 12;
+	unsigned p = data.size() / n0;
+	unsigned r = data.size() % n0;
+	double sum = 0.;
+	sum = std::accumulate(data.cbegin() + p * n0, data.cend(), 0);
+	if (p == 0) return sum;
+	else 
+	{
+		vector<double> temp_sum(p, 0);
+		for (unsigned i = 0; i < p; i++) 
+		{
+			temp_sum[i] = std::accumulate(
+				data.cbegin() + i * n0, data.cbegin() + (i + 1) * n0, 0);
+		}
+		temp_sum.push_back(sum);
+		return ComputeSum(temp_sum);
+	}
+}
+
+double L1Distance(const Point &p1, const Point &p2) 
+{
+	double max_diff = 0; 
+	for (unsigned i = 0; i < p1.dim(); i++) 
+	{
+		double diff = abs(p1[i] - p2[i]);
+		if (diff > max_diff) max_diff = diff;
+	}
+	return max_diff;
+}
+
+double EclideanDistance(const Point &p1, const Point &p2)
+{
+	double sum = 0.;
+	for (unsigned i = 0; i < p1.dim(); i++)
+	{
+		double diff = p1[i] - p2[i];
+		sum += diff * diff;
+	}
+	return sqrt(sum);
 }
 
 int *readdata(char *filenm, unsigned long *filelen)

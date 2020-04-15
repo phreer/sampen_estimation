@@ -1,9 +1,10 @@
 #!/bin/bash
 FILENAME="data/power_two/ecg_114157_2p17.txt"
-M=4
+M=3
 R=30
-OUTPUT="result/wsl/219_sample-num_sample-size_m"$M"_r"$R"_2p17.txt"
-for i in `seq 8 1 17`
+OUTPUT_PATH="result/wsl/415"
+OUTPUT="$OUTPUT_PATH/sample-num_sample-size_m"$M"_r"$R"_2p17.txt"
+for i in `seq 8 1 14`
 do
     SAMPLE_SIZE=`python -c "print(2 ** $i)"`
     SAMPLE_NUM=`python -c "print(2 ** (17 - $i))"`

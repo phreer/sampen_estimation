@@ -1,0 +1,24 @@
+Method: Quasi-random
+Error = -0.824909, Relative Error (Quasi-random) = -0.338862
+Error = 0.130603, Relative Error (Quasi-random) = 0.0536501
+Error = 0.0913822, Relative Error (Quasi-random) = 0.0375387
+Error = -0.524804, Relative Error (Quasi-random) = -0.215583
+Error = -0.307948, Relative Error (Quasi-random) = -0.126501
+Error = -0.213254, Relative Error (Quasi-random) = -0.0876023
+Error = -0.181886, Relative Error (Quasi-random) = -0.0747165
+Error = 0.0266275, Relative Error (Quasi-random) = 0.0109382
+Error = 0.0725763, Relative Error (Quasi-random) = 0.0298135
+Error = -0.00292847, Relative Error (Quasi-random) = -0.00120298
+Error = -0.824909, Relative Error (Quasi-random) = -0.338862
+Method: KD Tree Sampling
+Error = -2.43435, Relative Error (kd-tree histogram) = -1
+Error = -2.43434, Relative Error (kd-tree histogram) = -0.999997
+Error = 0.784529, Relative Error (kd-tree histogram) = 0.322275
+Error = 0.427854, Relative Error (kd-tree histogram) = 0.175757
+Error = 1.27923, Relative Error (kd-tree histogram) = 0.52549
+Error = 0.812145, Relative Error (kd-tree histogram) = 0.333619
+Error = 0.214863, Relative Error (kd-tree histogram) = 0.0882632
+Error = 0.0124017, Relative Error (kd-tree histogram) = 0.00509449
+Error = 0.231287, Relative Error (kd-tree histogram) = 0.0950098
+Error = 0, Relative Error (kd-tree histogram) = 0
+Error = -1.7412, Relative Error (kd-tree histogram) = -0.715264

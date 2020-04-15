@@ -17,12 +17,16 @@
 
 using std::vector;
 
-double compute_sampen(long long A, long long B, unsigned N, unsigned m)
+double compute_sampen(double A, double B, unsigned N, unsigned m)
 {
-    if (A * B)
-        return -log(static_cast<double>(B) / A);
+    // std::cout << "A: " << A << ", B: " << B << std::endl;
+    if (A > 0 && B > 0)
+    {
+        // std::cout << "B / A: " << B / A << std::endl;
+        return -log(B / A);
+    }
     else
-        return -log(static_cast<double>(N - m - 1) / (N - m));
+        return -log((N - m - 1) / (N - m));
 }
 
 // base class to calculate sample entropy
@@ -129,6 +133,49 @@ private:
     bool random;
 };
 
+// quasi-random sampling
+class sampen_calculator_qr2 : public sampen_calculator
+{
+public:
+    explicit sampen_calculator_qr2(
+        unsigned sample_num_, unsigned sample_size_, bool random = false)
+        : sample_num(sample_num_), sample_size(sample_size_), random(random) 
+    {}
+    void set_sample_num(unsigned sample_num_) { sample_num = sample_num_; }
+    void set_sample_size(unsigned sample_size_)
+    {
+        sample_size = sample_size_;
+    }
+
+private:
+    virtual vector<long long> _compute_AB(const vector<int> &data,
+                                          unsigned m, int r) override;
+    unsigned sample_num;
+    unsigned sample_size;
+    bool random;
+};
+
+class SampenCalculatorCoreset 
+{
+public:
+    explicit SampenCalculatorCoreset(
+        unsigned sample_num_, unsigned sample_size_, bool random = false)
+        : sample_num(sample_num_), sample_size(sample_size_), random(random) 
+    {}
+    void set_sample_num(unsigned sample_num_) { sample_num = sample_num_; }
+    void set_sample_size(unsigned sample_size_)
+    {
+        sample_size = sample_size_;
+    }
+    double ComputeSampen(const vector<int> &data, unsigned m, int r);
+private:
+    vector<double> _ComputeAB(const vector<int> &data,
+                                 unsigned m, int r);
+    unsigned sample_num;
+    unsigned sample_size;
+    bool random;
+};
+
 // Compute sample entropy using new kd tree
 // Here, we require sample_size = 2^n for some non-negative integer n
 class sampen_calculator_nkd : public sampen_calculator
@@ -182,4 +229,10 @@ public:
         const vector<Point> &points, int r) override;
 };
 
+class ABCalculatorDirectWeighted 
+{
+public:
+    vector<double> ComputeAB(const vector<Point> &points, 
+                             const vector<double> &weights, int r);   
+};
 #endif // __SAMPEN_CALCULATOR_H__

@@ -1,0 +1,118 @@
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 1
+	_stat.sample_size: 1024
+	data length: 131072
+time: 121.806s
+Direct: SampEn(3, 30, 131072) = 0.114492
+time: 0.00945s
+Quasi-random: SampEn(3, 30, 131072) = 0.108563
+Error = -0.00592859, Relative Error (Quasi-random) = -0.0517818
+time: 0.168993s
+KD Tree Sampling: SampEn(3, 30, 1, 1024) = 0.119981
+Error = 0.0054894, Relative Error (kd-tree histogram) = 0.0479458
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 2
+	_stat.sample_size: 1024
+	data length: 131072
+time: 129.532s
+Direct: SampEn(3, 30, 131072) = 0.114492
+time: 0.01815s
+Quasi-random: SampEn(3, 30, 131072) = 0.111524
+Error = -0.00296812, Relative Error (Quasi-random) = -0.0259243
+time: 0.171403s
+KD Tree Sampling: SampEn(3, 30, 2, 1024) = 0.118901
+Error = 0.00440956, Relative Error (kd-tree histogram) = 0.0385142
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 4
+	_stat.sample_size: 1024
+	data length: 131072
+time: 120.596s
+Direct: SampEn(3, 30, 131072) = 0.114492
+time: 0.034797s
+Quasi-random: SampEn(3, 30, 131072) = 0.105205
+Error = -0.00928718, Relative Error (Quasi-random) = -0.0811165
+time: 0.276469s
+KD Tree Sampling: SampEn(3, 30, 4, 1024) = 0.116198
+Error = 0.00170639, Relative Error (kd-tree histogram) = 0.0149041
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 8
+	_stat.sample_size: 1024
+	data length: 131072
+time: 120.524s
+Direct: SampEn(3, 30, 131072) = 0.114492
+time: 0.068136s
+Quasi-random: SampEn(3, 30, 131072) = 0.112582
+Error = -0.00191031, Relative Error (Quasi-random) = -0.0166851
+time: 0.212202s
+KD Tree Sampling: SampEn(3, 30, 8, 1024) = 0.111539
+Error = -0.00295299, Relative Error (kd-tree histogram) = -0.0257921
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 16
+	_stat.sample_size: 1024
+	data length: 131072
+time: 121.156s
+Direct: SampEn(3, 30, 131072) = 0.114492
+time: 0.136118s
+Quasi-random: SampEn(3, 30, 131072) = 0.114218
+Error = -0.000274274, Relative Error (Quasi-random) = -0.00239557
+time: 0.268608s
+KD Tree Sampling: SampEn(3, 30, 16, 1024) = 0.114213
+Error = -0.000279299, Relative Error (kd-tree histogram) = -0.00243947
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 32
+	_stat.sample_size: 1024
+	data length: 131072
+time: 121.686s
+Direct: SampEn(3, 30, 131072) = 0.114492
+time: 0.270125s
+Quasi-random: SampEn(3, 30, 131072) = 0.115726
+Error = 0.00123453, Relative Error (Quasi-random) = 0.0107827
+time: 0.394195s
+KD Tree Sampling: SampEn(3, 30, 32, 1024) = 0.114359
+Error = -0.000133062, Relative Error (kd-tree histogram) = -0.00116219
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 64
+	_stat.sample_size: 1024
+	data length: 131072
+time: 128.954s
+Direct: SampEn(3, 30, 131072) = 0.114492
+time: 0.576046s
+Quasi-random: SampEn(3, 30, 131072) = 0.116139
+Error = 0.00164727, Relative Error (Quasi-random) = 0.0143876
+time: 0.643206s
+KD Tree Sampling: SampEn(3, 30, 64, 1024) = 0.11633
+Error = 0.00183796, Relative Error (kd-tree histogram) = 0.0160532
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 128
+	_stat.sample_size: 1024
+	data length: 131072
+time: 127.664s
+Direct: SampEn(3, 30, 131072) = 0.114492
+time: 1.069s
+Quasi-random: SampEn(3, 30, 131072) = 0.114697
+Error = 0.000204719, Relative Error (Quasi-random) = 0.00178807
+time: 1.08378s
+KD Tree Sampling: SampEn(3, 30, 128, 1024) = 0.115094
+Error = 0.000602298, Relative Error (kd-tree histogram) = 0.00526062
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 1
+	_stat.sample_size: 2048
+	data length: 131072

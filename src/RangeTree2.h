@@ -140,6 +140,12 @@ namespace RangeTree {
             }
             multiplicity += n;
         }
+        
+
+        /**
+        * Increase the point's count/multiplicity by one.
+        */
+       inline void increaseCountByOne() { multiplicity += 1; }
 
         /**
         * The point's value.
@@ -167,6 +173,14 @@ namespace RangeTree {
         * @return the coordinate value.
         */
         inline T operator[](int index) const {
+            if(index < 0 || index >= dim()) {
+                throw std::out_of_range("[] access index for point is out of range.");
+            }
+            return vec[index];
+        }
+
+        T& operator[](int index) 
+        {
             if(index < 0 || index >= dim()) {
                 throw std::out_of_range("[] access index for point is out of range.");
             }

@@ -1,0 +1,119 @@
+Sample rate: 0.00195312
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 1024
+	_stat.sample_size: 256
+	data length: 131072
+time: 280.365s
+Direct: SampEn(3, 30, 131072) = 0.114492
+time: 1.21237s
+Quasi-random: SampEn(3, 30, 131072) = 0.114704
+Error = 0.000212415, Relative Error (Quasi-random) = 0.00185529
+time: 1.50795s
+KD Tree Sampling: SampEn(3, 30, 1024, 256) = 0.116159
+Error = 0.00166701, Relative Error (kd-tree histogram) = 0.01456
+time: 111.233s
+kd tree: SampEn(3, 30, 131072) = 0.114492
+Sample rate: 0.00390625
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 1024
+	_stat.sample_size: 512
+	data length: 131072
+time: 216.457s
+Direct: SampEn(3, 30, 131072) = 0.114492
+time: 3.73199s
+Quasi-random: SampEn(3, 30, 131072) = 0.114687
+Error = 0.000195272, Relative Error (Quasi-random) = 0.00170556
+time: 3.92517s
+KD Tree Sampling: SampEn(3, 30, 1024, 512) = 0.115701
+Error = 0.00120894, Relative Error (kd-tree histogram) = 0.0105592
+time: 83.4269s
+kd tree: SampEn(3, 30, 131072) = 0.114492
+Sample rate: 0.0078125
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 1024
+	_stat.sample_size: 1024
+	data length: 131072
+time: 220.292s
+Direct: SampEn(3, 30, 131072) = 0.114492
+time: 14.289s
+Quasi-random: SampEn(3, 30, 131072) = 0.114493
+Error = 1.04325e-06, Relative Error (Quasi-random) = 9.11205e-06
+time: 15.0221s
+KD Tree Sampling: SampEn(3, 30, 1024, 1024) = 0.114834
+Error = 0.000342653, Relative Error (kd-tree histogram) = 0.00299281
+time: 91.8961s
+kd tree: SampEn(3, 30, 131072) = 0.114492
+Sample rate: 0.015625
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 1024
+	_stat.sample_size: 2048
+	data length: 131072
+time: 224.463s
+Direct: SampEn(3, 30, 131072) = 0.114492
+time: 56.7944s
+Quasi-random: SampEn(3, 30, 131072) = 0.114489
+Error = -3.28027e-06, Relative Error (Quasi-random) = -2.86507e-05
+time: 56.8996s
+KD Tree Sampling: SampEn(3, 30, 1024, 2048) = 0.114723
+Error = 0.000231336, Relative Error (kd-tree histogram) = 0.00202055
+time: 85.8616s
+kd tree: SampEn(3, 30, 131072) = 0.114492
+Sample rate: 0.03125
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 1024
+	_stat.sample_size: 4096
+	data length: 131072
+time: 227.258s
+Direct: SampEn(3, 30, 131072) = 0.114492
+time: 227.071s
+Quasi-random: SampEn(3, 30, 131072) = 0.114532
+Error = 3.99364e-05, Relative Error (Quasi-random) = 0.000348814
+time: 226.108s
+KD Tree Sampling: SampEn(3, 30, 1024, 4096) = 0.112067
+Error = -0.00242475, Relative Error (kd-tree histogram) = -0.0211784
+time: 75.8867s
+kd tree: SampEn(3, 30, 131072) = 0.114492
+Sample rate: 0.0625
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 1024
+	_stat.sample_size: 8192
+	data length: 131072
+time: 229.362s
+Direct: SampEn(3, 30, 131072) = 0.114492
+time: 910.952s
+Quasi-random: SampEn(3, 30, 131072) = 0.114506
+Error = 1.37571e-05, Relative Error (Quasi-random) = 0.000120157
+time: 873.309s
+KD Tree Sampling: SampEn(3, 30, 1024, 8192) = 0.114526
+Error = 3.43281e-05, Relative Error (kd-tree histogram) = 0.00029983
+time: 83.693s
+kd tree: SampEn(3, 30, 131072) = 0.114492
+Sample rate: 0.125
+build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
+	_stat.m: 3
+	_stat.r: 30
+	_stat.sample_num: 1024
+	_stat.sample_size: 16384
+	data length: 131072
+time: 246.753s
+Direct: SampEn(3, 30, 131072) = 0.114492
+time: 3774.88s
+Quasi-random: SampEn(3, 30, 131072) = 0.114494
+Error = 1.95244e-06, Relative Error (Quasi-random) = 1.70531e-05
+time: 3647.88s
+KD Tree Sampling: SampEn(3, 30, 1024, 16384) = 0.114707
+Error = 0.000215259, Relative Error (kd-tree histogram) = 0.00188013
+time: 64.49s
+kd tree: SampEn(3, 30, 131072) = 0.114492

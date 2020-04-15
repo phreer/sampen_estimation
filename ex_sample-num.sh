@@ -3,7 +3,7 @@ set x
 M=3
 R=30
 FILENAME="data/power_two/ecg_114157_2p17.txt"
-OUTPUT="result/wsl/218_sample-num_m"$M"_r"$R"_sample-size2p11".txt
+OUTPUT="result/wsl/414/sample-num_m"$M"_r"$R"_sample-size2p11".txt
 SAMPLE_SIZE=`python -c "print(2 ** 11)"`
 
 for i in `seq 0 1 15`

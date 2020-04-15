@@ -1,0 +1,47 @@
+Method: Direct
+time: 0.091269
+time: 0.399193
+time: 1.58416
+time: 6.60668
+time: 30.8051
+time: 106.693
+time: 423.882
+Method: kd tree:
+time: 0.103465
+time: 0.391702
+time: 1.63816
+time: 5.34093
+time: 27.7242
+time: 81.3526
+time: 296.583
+Method: kd tree (grid)
+time: 0.462089
+time: 1.87208
+time: 6.16697
+time: 22.0617
+time: 88.1865
+time: 249.816
+time: 738.419
+Method: Range Tree
+time: 1.3452
+time: 3.85096
+time: 12.1907
+time: 36.971
+time: 157.811
+time: 642.216
+Method: Quai-random
+time: 0.059086
+time: 0.12893
+time: 0.255573
+time: 0.505165
+time: 1.07052
+time: 1.94584
+time: 3.81019
+Method: KD Tree ampling
+time: 0.052956
+time: 0.111627
+time: 0.22885
+time: 0.450888
+time: 1.04469
+time: 1.7582
+time: 3.42216

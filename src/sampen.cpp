@@ -40,7 +40,13 @@ double calculate_sampen_kdtree(
     const vector<int> &data, unsigned m, int r);
 double calculate_sampen_kdtree_grid(
     const vector<int> &data, unsigned m, int r);
-double calculate_sampen_rangetree_random(
+double ComputeSampenQR(
+    const vector<int> &data, unsigned m, int r, 
+    unsigned sample_size, unsigned sample_num);
+double ComputeSampenQR2(
+    const vector<int> &data, unsigned m, int r, 
+    unsigned sample_size, unsigned sample_num);
+double ComputeSampenCoreset(
     const vector<int> &data, unsigned m, int r, 
     unsigned sample_size, unsigned sample_num);
 double calculate_sampen_rangetree_hist(
@@ -64,6 +70,9 @@ int main(int argc, char *argv[]) {
     free(_data);
     for (int i = 0; i < _stat.m; i++) data.push_back(data.back());
 
+    double sample_rate = static_cast<double>(_stat.sample_size) / N;
+    cout << "Sample rate: " << sample_rate << endl;
+    
     cout << argv[0];
     cout << "\t_stat.filename: " << _stat.filename << endl;
     cout << "\t_stat.m: " << _stat.m << endl;
@@ -77,9 +86,20 @@ int main(int argc, char *argv[]) {
     cout << "Direct: SampEn(" << _stat.m << ", " << _stat.r << ", ";
     cout << N << ") = " << result << endl;
 
+
+    // // Compute sample entropy by quasi-random sampling
+    // double result_random = ComputeSampenQR2(
+    //     data, _stat.m, _stat.r, _stat.sample_size, _stat.sample_num);
+    // cout << "Quasi-random2: SampEn(" ;
+    // cout << _stat.m << ", " << _stat.r << ", ";
+    // cout << N << ") = " << result_random << endl;
+
+    // double error = result_random - result;
+    // cout << "Error = " << error;
+    // cout << ", Relative Error (Quasi-random) = " << error / result << endl;
+
     // Compute sample entropy by random sampling
-    double sample_rate = static_cast<double>(_stat.sample_size) / N;
-    double result_random = calculate_sampen_rangetree_random(
+    double result_random = ComputeSampenQR(
         data, _stat.m, _stat.r, _stat.sample_size, _stat.sample_num);
     cout << "Quasi-random: SampEn(" ;
     cout << _stat.m << ", " << _stat.r << ", ";
@@ -88,6 +108,17 @@ int main(int argc, char *argv[]) {
     double error = result_random - result;
     cout << "Error = " << error;
     cout << ", Relative Error (Quasi-random) = " << error / result << endl;
+
+    // Compute sample entropy using corset
+    result_random = ComputeSampenCoreset(data, _stat.m, _stat.r, 
+        _stat.sample_size, _stat.sample_num);
+    cout << "Coreset: SampEn(" ;
+    cout << _stat.m << ", " << _stat.r << ", ";
+    cout << N << ") = " << result_random << endl;
+
+    error = result_random - result;
+    cout << "Error = " << error;
+    cout << ", Relative Error (Coreset) = " << error / result << endl;
 
     /* Compute sample entropy by sampling according to kd tree */
     double result_hist = calculate_sampen_nkdtree_hist(data, _stat.m, _stat.r, 
@@ -99,10 +130,10 @@ int main(int argc, char *argv[]) {
     cout << "Error = " << error;
     cout << ", Relative Error (kd-tree histogram) = " << error / result << endl;
 
-    // // Compute sample entropy by kd tree
-    // result = calculate_sampen_kdtree(data, _stat.m, _stat.r);
-    // cout << "kd tree: SampEn(" << _stat.m << ", " << _stat.r << ", ";
-    // cout << N << ") = " << result << endl;
+    // Compute sample entropy by kd tree
+    result = calculate_sampen_kdtree(data, _stat.m, _stat.r);
+    cout << "kd tree: SampEn(" << _stat.m << ", " << _stat.r << ", ";
+    cout << N << ") = " << result << endl;
 
     // // Compute sample entropy by kd tree (grid)
     // result = calculate_sampen_kdtree_grid(data, _stat.m, _stat.r);
@@ -162,12 +193,28 @@ double calculate_sampen_kdtree_grid(
     return sc.compute_entropy(data, m, r);
 }
 
-double calculate_sampen_rangetree_random(
+double ComputeSampenQR(
     const vector<int> &data, const unsigned m, const int r, 
     const unsigned sample_size, const unsigned sample_num) 
 {
     sampen_calculator_qr sc(sample_num, sample_size);
     return sc.compute_entropy(data, m, r);
+}
+
+double ComputeSampenQR2(
+    const vector<int> &data, const unsigned m, const int r, 
+    const unsigned sample_size, const unsigned sample_num) 
+{
+    sampen_calculator_qr2 sc(sample_num, sample_size);
+    return sc.compute_entropy(data, m, r);
+}
+
+double ComputeSampenCoreset(
+    const vector<int> &data, unsigned m, int r, 
+    unsigned sample_size, unsigned sample_num)
+{
+    SampenCalculatorCoreset sc(sample_num, sample_size);
+    return sc.ComputeSampen(data, m, r);
 }
 
 double calculate_sampen_rangetree_hist(

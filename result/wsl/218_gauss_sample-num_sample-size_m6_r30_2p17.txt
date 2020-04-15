@@ -1,0 +1,160 @@
+build/bin/sampen	_stat.filename: data/gauss/gauss_2p17.txt
+	_stat.m: 6
+	_stat.r: 30
+	_stat.sample_num: 512
+	_stat.sample_size: 256
+	data length: 131072
+time: 91.6426s
+Direct: SampEn(6, 30, 131072) = 2.43435
+time: 0.157348s
+Quasi-random: SampEn(6, 30, 131072) = 1.60944
+Error = -0.824909, Relative Error (Quasi-random) = -0.338862
+time: 0.335488s
+KD Tree Sampling: SampEn(6, 30, 512, 256) = -0
+Error = -2.43435, Relative Error (kd-tree histogram) = -1
+build/bin/sampen	_stat.filename: data/gauss/gauss_2p17.txt
+	_stat.m: 6
+	_stat.r: 30
+	_stat.sample_num: 256
+	_stat.sample_size: 512
+	data length: 131072
+time: 86.9304s
+Direct: SampEn(6, 30, 131072) = 2.43435
+time: 0.298778s
+Quasi-random: SampEn(6, 30, 131072) = 2.56495
+Error = 0.130603, Relative Error (Quasi-random) = 0.0536501
+time: 0.475013s
+KD Tree Sampling: SampEn(6, 30, 256, 512) = 7.62942e-06
+Error = -2.43434, Relative Error (kd-tree histogram) = -0.999997
+build/bin/sampen	_stat.filename: data/gauss/gauss_2p17.txt
+	_stat.m: 6
+	_stat.r: 30
+	_stat.sample_num: 128
+	_stat.sample_size: 1024
+	data length: 131072
+time: 86.6751s
+Direct: SampEn(6, 30, 131072) = 2.43435
+time: 0.60282s
+Quasi-random: SampEn(6, 30, 131072) = 2.52573
+Error = 0.0913822, Relative Error (Quasi-random) = 0.0375387
+time: 0.730041s
+KD Tree Sampling: SampEn(6, 30, 128, 1024) = 3.21888
+Error = 0.784529, Relative Error (kd-tree histogram) = 0.322275
+build/bin/sampen	_stat.filename: data/gauss/gauss_2p17.txt
+	_stat.m: 6
+	_stat.r: 30
+	_stat.sample_num: 64
+	_stat.sample_size: 2048
+	data length: 131072
+time: 85.5972s
+Direct: SampEn(6, 30, 131072) = 2.43435
+time: 1.19712s
+Quasi-random: SampEn(6, 30, 131072) = 1.90954
+Error = -0.524804, Relative Error (Quasi-random) = -0.215583
+time: 1.25021s
+KD Tree Sampling: SampEn(6, 30, 64, 2048) = 2.8622
+Error = 0.427854, Relative Error (kd-tree histogram) = 0.175757
+build/bin/sampen	_stat.filename: data/gauss/gauss_2p17.txt
+	_stat.m: 6
+	_stat.r: 30
+	_stat.sample_num: 32
+	_stat.sample_size: 4096
+	data length: 131072
+time: 86.2626s
+Direct: SampEn(6, 30, 131072) = 2.43435
+time: 2.69192s
+Quasi-random: SampEn(6, 30, 131072) = 2.1264
+Error = -0.307948, Relative Error (Quasi-random) = -0.126501
+time: 2.25173s
+KD Tree Sampling: SampEn(6, 30, 32, 4096) = 3.71357
+Error = 1.27923, Relative Error (kd-tree histogram) = 0.52549
+build/bin/sampen	_stat.filename: data/gauss/gauss_2p17.txt
+	_stat.m: 6
+	_stat.r: 30
+	_stat.sample_num: 16
+	_stat.sample_size: 8192
+	data length: 131072
+time: 87.5242s
+Direct: SampEn(6, 30, 131072) = 2.43435
+time: 4.94371s
+Quasi-random: SampEn(6, 30, 131072) = 2.22109
+Error = -0.213254, Relative Error (Quasi-random) = -0.0876023
+time: 4.94566s
+KD Tree Sampling: SampEn(6, 30, 16, 8192) = 3.24649
+Error = 0.812145, Relative Error (kd-tree histogram) = 0.333619
+build/bin/sampen	_stat.filename: data/gauss/gauss_2p17.txt
+	_stat.m: 6
+	_stat.r: 30
+	_stat.sample_num: 8
+	_stat.sample_size: 16384
+	data length: 131072
+time: 94.1598s
+Direct: SampEn(6, 30, 131072) = 2.43435
+time: 10.4738s
+Quasi-random: SampEn(6, 30, 131072) = 2.25246
+Error = -0.181886, Relative Error (Quasi-random) = -0.0747165
+time: 9.13028s
+KD Tree Sampling: SampEn(6, 30, 8, 16384) = 2.64921
+Error = 0.214863, Relative Error (kd-tree histogram) = 0.0882632
+build/bin/sampen	_stat.filename: data/gauss/gauss_2p17.txt
+	_stat.m: 6
+	_stat.r: 30
+	_stat.sample_num: 4
+	_stat.sample_size: 32768
+	data length: 131072
+time: 92.8643s
+Direct: SampEn(6, 30, 131072) = 2.43435
+time: 20.316s
+Quasi-random: SampEn(6, 30, 131072) = 2.46097
+Error = 0.0266275, Relative Error (Quasi-random) = 0.0109382
+time: 15.8926s
+KD Tree Sampling: SampEn(6, 30, 4, 32768) = 2.44675
+Error = 0.0124017, Relative Error (kd-tree histogram) = 0.00509449
+build/bin/sampen	_stat.filename: data/gauss/gauss_2p17.txt
+	_stat.m: 6
+	_stat.r: 30
+	_stat.sample_num: 2
+	_stat.sample_size: 65536
+	data length: 131072
+time: 91.3606s
+Direct: SampEn(6, 30, 131072) = 2.43435
+time: 40.9707s
+Quasi-random: SampEn(6, 30, 131072) = 2.50692
+Error = 0.0725763, Relative Error (Quasi-random) = 0.0298135
+time: 35.1351s
+KD Tree Sampling: SampEn(6, 30, 2, 65536) = 2.66563
+Error = 0.231287, Relative Error (kd-tree histogram) = 0.0950098
+build/bin/sampen	_stat.filename: data/gauss/gauss_2p17.txt
+	_stat.m: 6
+	_stat.r: 30
+	_stat.sample_num: 1
+	_stat.sample_size: 131072
+	data length: 131072
+time: 91.5884s
+Direct: SampEn(6, 30, 131072) = 2.43435
+time: 89.8781s
+Quasi-random: SampEn(6, 30, 131072) = 2.43142
+Error = -0.00292847, Relative Error (Quasi-random) = -0.00120298
+time: 74.9369s
+KD Tree Sampling: SampEn(6, 30, 1, 131072) = 2.43435
+Error = 0, Relative Error (kd-tree histogram) = 0
+build/bin/sampen	_stat.filename: data/gauss/gauss_2p17.txt
+	_stat.m: 6
+	_stat.r: 30
+	_stat.sample_num: 512
+	_stat.sample_size: 256
+	data length: 131072
+time: 91.8269s
+Direct: SampEn(6, 30, 131072) = 2.43435
+time: 0.154287s
+Quasi-random: SampEn(6, 30, 131072) = 1.60944
+Error = -0.824909, Relative Error (Quasi-random) = -0.338862
+time: 0.338726s
+KD Tree Sampling: SampEn(6, 30, 512, 256) = 0.693147
+Error = -1.7412, Relative Error (kd-tree histogram) = -0.715264
+build/bin/sampen	_stat.filename: data/gauss/gauss_2p17.txt
+	_stat.m: 6
+	_stat.r: 30
+	_stat.sample_num: 256
+	_stat.sample_size: 512
+	data length: 131072
