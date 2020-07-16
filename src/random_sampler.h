@@ -46,7 +46,7 @@ private:
 /*
  * Convert a sequence of data to vector of Points
  */
-vector<Point> get_points(const vector<int> &data, unsigned m);
+vector<Point> GetPoints(const vector<int> &data, unsigned m);
 
 /* 
  * Sample a vector of Points by sampling according to histogram

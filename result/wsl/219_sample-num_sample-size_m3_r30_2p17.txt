@@ -1,7 +1,0 @@
-Sample rate: 0.00195312
-build/bin/sampen	_stat.filename: data/power_two/ecg_114157_2p17.txt
-	_stat.m: 3
-	_stat.r: 30
-	_stat.sample_num: 512
-	_stat.sample_size: 256
-	data length: 131072

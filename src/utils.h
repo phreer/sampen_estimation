@@ -21,7 +21,7 @@ typedef RT::Point<int, int> Point;
 
 int *readdata(char *filenm, unsigned long *filelen);
 
-vector<Point> get_points(const vector<int> &data, unsigned m);
+vector<Point> GetPoints(const vector<int> &data, unsigned m);
 
 bool IsPowerTwo(unsigned n);
 double ComputeVarience(const vector<int> &data);

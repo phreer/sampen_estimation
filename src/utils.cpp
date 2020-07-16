@@ -8,7 +8,7 @@
 using std::cerr;
 using std::endl;
 
-vector<Point> get_points(const vector<int> &data, unsigned m)
+vector<Point> GetPoints(const vector<int> &data, unsigned m)
 {
     vector<Point> result(data.size() - m + 1);
     for (unsigned i = 0; i < result.size(); i++)
@@ -39,11 +39,10 @@ double ComputeVarience(const vector<int> &data)
 
 double ComputeSum(const vector<double> &data)
 {
-	unsigned n0 = 1 << 12;
+	unsigned n0 = 1 << 10;
 	unsigned p = data.size() / n0;
-	unsigned r = data.size() % n0;
 	double sum = 0.;
-	sum = std::accumulate(data.cbegin() + p * n0, data.cend(), 0);
+	sum = std::accumulate(data.cbegin() + p * n0, data.cend(), 0.);
 	if (p == 0) return sum;
 	else 
 	{
@@ -51,7 +50,7 @@ double ComputeSum(const vector<double> &data)
 		for (unsigned i = 0; i < p; i++) 
 		{
 			temp_sum[i] = std::accumulate(
-				data.cbegin() + i * n0, data.cbegin() + (i + 1) * n0, 0);
+				data.cbegin() + i * n0, data.cbegin() + (i + 1) * n0, 0.);
 		}
 		temp_sum.push_back(sum);
 		return ComputeSum(temp_sum);

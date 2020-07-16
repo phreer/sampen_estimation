@@ -17,7 +17,7 @@
 
 using std::vector;
 
-double compute_sampen(double A, double B, unsigned N, unsigned m)
+double ComputeSampenAB(double A, double B, unsigned N, unsigned m)
 {
     // std::cout << "A: " << A << ", B: " << B << std::endl;
     if (A > 0 && B > 0)
@@ -30,32 +30,28 @@ double compute_sampen(double A, double B, unsigned N, unsigned m)
 }
 
 // base class to calculate sample entropy
-class sampen_calculator
+class SampenCalculator
 {
 private:
-    void check_dim(const vector<int> &data, unsigned m)
+    void _CheckDim(const vector<int> &data, unsigned m)
     {
         if (data.size() <= m)
             throw std::invalid_argument("data.size() < m");
     }
-    virtual vector<long long> _compute_AB(const vector<int> &data,
-                                          unsigned m, int r) = 0;
+    virtual vector<long long> _ComputeAB(
+        const vector<int> &data, unsigned m, int r) = 0;
 
 public:
-    vector<long long> compute_AB(const vector<int> &data,
-                                 unsigned m, int r)
+    virtual double ComputeEntropy(const vector<int> &data,
+                                  unsigned m, int r, double *a, double *b)
     {
-        check_dim(data, m);
-        return _compute_AB(data, m, r);
-    }
-    virtual double compute_entropy(const vector<int> &data,
-                                   unsigned m, int r)
-    {
+        _CheckDim(data, m);
         auto start = std::chrono::system_clock::now();
-        vector<long long> AB = compute_AB(data, m, r);
+        vector<long long> AB = _ComputeAB(data, m, r);
         auto end = std::chrono::system_clock::now();
         std::chrono::duration<double> interval = end - start;
         std::cout << "time: " << interval.count() << "s" << std::endl;
+
         unsigned N = data.size();
         unsigned sample_num = AB.size() / 2;
         double result = 0;
@@ -67,55 +63,51 @@ public:
             A += AB[i * 2];
             B += AB[i * 2 + 1];
         }
-        result = compute_sampen(A, B, N, m);
-#ifdef DEBUG
-        std::cout << "A is " << A << ", B is " << B << std::endl;
-#endif
-        // for (unsigned i = 0; i < sample_num; i++) 
-        //     result += compute_sampen(AB[i * 2], AB[i * 2 + 1], N, m);
-        // result /= sample_num;
+        if (a) *a = A / sample_num;
+        if (b) *b = B / sample_num;
+        result = ComputeSampenAB(A, B, N, m);
 
         return result;
     }
 };
 
 // direct method
-class sampen_calculator_d : public sampen_calculator
+class SampenCalculatorD : public SampenCalculator
 {
 private:
-    virtual vector<long long> _compute_AB(
+    virtual vector<long long> _ComputeAB(
         const vector<int> &data, unsigned m, int r) override;
 };
 
 // range tree
-class sampen_calculator_rt : public sampen_calculator
+class SampenCalculatorRT : public SampenCalculator
 {
 private:
-    virtual vector<long long> _compute_AB(
+    virtual vector<long long> _ComputeAB(
         const vector<int> &data, unsigned m, int r) override;
 };
 
 // old kd tree
-class sampen_calculator_kd: public sampen_calculator
+class SampenCalculatorKD: public SampenCalculator
 {
 private:
-    virtual vector<long long> _compute_AB(
+    virtual vector<long long> _ComputeAB(
         const vector<int> &data, unsigned m, int r) override;
 };
 
 // Compute sample entropy by kd tree divided according to grid
-class sampen_calculator_kdg: public sampen_calculator
+class SampenCalculatorKDG: public SampenCalculator
 {
 private:
-    virtual vector<long long> _compute_AB(
+    virtual vector<long long> _ComputeAB(
         const vector<int> &data, unsigned m, int r) override;
 };
 
-// quasi-random sampling
-class sampen_calculator_qr : public sampen_calculator
+// Uniform distribution sampling
+class SampenCalculatorUniform: public SampenCalculator
 {
 public:
-    explicit sampen_calculator_qr(
+    explicit SampenCalculatorUniform(
         unsigned sample_num_, unsigned sample_size_, bool random = false)
         : sample_num(sample_num_), sample_size(sample_size_), random(random) 
     {}
@@ -126,7 +118,7 @@ public:
     }
 
 private:
-    virtual vector<long long> _compute_AB(const vector<int> &data,
+    virtual vector<long long> _ComputeAB(const vector<int> &data,
                                           unsigned m, int r) override;
     unsigned sample_num;
     unsigned sample_size;
@@ -134,12 +126,13 @@ private:
 };
 
 // quasi-random sampling
-class sampen_calculator_qr2 : public sampen_calculator
+class SampenCalculatorQR: public SampenCalculator
 {
 public:
-    explicit sampen_calculator_qr2(
-        unsigned sample_num_, unsigned sample_size_, bool random = false)
-        : sample_num(sample_num_), sample_size(sample_size_), random(random) 
+    explicit SampenCalculatorQR(unsigned sample_num_, unsigned sample_size_, 
+                                bool presort = true, bool random = false) 
+        : sample_num(sample_num_), sample_size(sample_size_), 
+        presort(presort), random(random) 
     {}
     void set_sample_num(unsigned sample_num_) { sample_num = sample_num_; }
     void set_sample_size(unsigned sample_size_)
@@ -148,12 +141,14 @@ public:
     }
 
 private:
-    virtual vector<long long> _compute_AB(const vector<int> &data,
+    virtual vector<long long> _ComputeAB(const vector<int> &data,
                                           unsigned m, int r) override;
     unsigned sample_num;
     unsigned sample_size;
     bool random;
+    bool presort;
 };
+
 
 class SampenCalculatorCoreset 
 {
@@ -167,10 +162,11 @@ public:
     {
         sample_size = sample_size_;
     }
-    double ComputeSampen(const vector<int> &data, unsigned m, int r);
+    double ComputeSampen(const vector<int> &data, unsigned m, int r, 
+                         double *a, double *b);
 private:
     vector<double> _ComputeAB(const vector<int> &data,
-                                 unsigned m, int r);
+                              unsigned m, int r);
     unsigned sample_num;
     unsigned sample_size;
     bool random;
@@ -178,10 +174,10 @@ private:
 
 // Compute sample entropy using new kd tree
 // Here, we require sample_size = 2^n for some non-negative integer n
-class sampen_calculator_nkd : public sampen_calculator
+class SampenCalculatorNKD : public SampenCalculator
 {
 public:
-    explicit sampen_calculator_nkd(
+    explicit SampenCalculatorNKD(
         unsigned sample_num, unsigned sample_size)
         : sample_num_(sample_num), sample_size_(sample_size) 
         {
@@ -189,43 +185,43 @@ public:
                 throw std::invalid_argument("sample_size should be power of 2");
         }
 private:
-    virtual vector<long long> _compute_AB(const vector<int> &data,
+    virtual vector<long long> _ComputeAB(const vector<int> &data,
                                           unsigned m, int r) override;
     unsigned sample_num_;
     unsigned sample_size_;
 };
 
 // Compute sampen by sample using histogram
-class sampen_calculator_hg : public sampen_calculator
+class SampenCalculatorHG : public SampenCalculator
 {
 private:
     double _sample_rate;
-    virtual vector<long long> _compute_AB(
+    virtual vector<long long> _ComputeAB(
         const vector<int> &data, unsigned m, int r) override;
 public:
-    sampen_calculator_hg(double sample_rate_)
+    SampenCalculatorHG(double sample_rate_)
     : _sample_rate(sample_rate_) {}
 };
 
 // base class that compute A and B with vector of points
-class AB_calculator_point
+class ABCalculatorPoint
 {
 public:
-    virtual vector<long long> compute_AB(
+    virtual vector<long long> ComputeAB(
         const vector<Point> &points, int r) = 0;
 };
 
-class AB_calculator_point_d : public AB_calculator_point
+class ABCalculatorPointD : public ABCalculatorPoint
 {
 public:
-    virtual vector<long long> compute_AB(
+    virtual vector<long long> ComputeAB(
         const vector<Point> &points, int r) override;
 };
 
-class AB_calculator_point_rt : public AB_calculator_point
+class ABCalculatorPointRT : public ABCalculatorPoint
 {
 public:
-    virtual vector<long long> compute_AB(
+    virtual vector<long long> ComputeAB(
         const vector<Point> &points, int r) override;
 };
 
@@ -235,4 +231,44 @@ public:
     vector<double> ComputeAB(const vector<Point> &points, 
                              const vector<double> &weights, int r);   
 };
+
+
+double ComputeSampenDirect(
+    const vector<int> &data, unsigned m, int r, double *a, double *b);
+
+double ComputeSampenRangetree(
+    const vector<int> &data, unsigned m, int r, double *a, double *b);
+
+double ComputeSampenKdtree(
+    const vector<int> &data, unsigned m, int r, double *a, double *b);
+
+double ComputeSampenNkdtreeHist(
+    const vector<int> &data, unsigned m, int r, 
+    unsigned sample_size, unsigned sample_num, double *a, double *b);
+
+double ComputeSampenKdtreeGrid(
+    const vector<int> &data, unsigned m, int r, 
+    double *a, double *b);
+
+double ComputeSampenQR(
+    const vector<int> &data, const unsigned m, const int r, 
+    const unsigned sample_size, const unsigned sample_num, 
+    double *a, double *b);
+
+double ComputeSampenQR2( 
+    const vector<int> &data, const unsigned m, const int r, 
+    const unsigned sample_size, const unsigned sample_num, 
+    double *a, double *b);
+
+double ComputeSampenCoreset(
+    const vector<int> &data, unsigned m, int r, 
+    unsigned sample_size, unsigned sample_num, double *a, double *b);
+
+double ComputeSampenUniform(
+    const vector<int> &data, unsigned m, int r, 
+    unsigned sample_size, unsigned sample_num, double *a, double *b);
+
+double ComputeSampenRangetreeHist(
+    const vector<int> &data, const unsigned m, 
+    const int r, double sample_rate, double *a, double *b);
 #endif // __SAMPEN_CALCULATOR_H__

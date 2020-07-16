@@ -19,44 +19,35 @@
 
 using std::pair;
 
-vector<long long> sampen_calculator_d::_compute_AB(
+vector<long long> SampenCalculatorD::_ComputeAB(
     const vector<int> &data, unsigned m, int r)
 {
-    AB_calculator_point_d ABc;
-    vector<Point> points = get_points(data, m + 1);
-    return ABc.compute_AB(points, r);
+    ABCalculatorPointD ABc;
+    vector<Point> points = GetPoints(data, m + 1);
+    return ABc.ComputeAB(points, r);
 }
 
-vector<long long> sampen_calculator_rt::_compute_AB(
+vector<long long> SampenCalculatorRT::_ComputeAB(
     const vector<int> &data, unsigned m, int r) 
 {
-    AB_calculator_point_rt ABc;
-    vector<Point> points = get_points(data, m + 1);
-    return ABc.compute_AB(points, r);    
+    ABCalculatorPointRT ABc;
+    vector<Point> points = GetPoints(data, m + 1);
+    return ABc.ComputeAB(points, r);    
 }
 
-vector<long long> sampen_calculator_qr::_compute_AB(
+// Uniform distribution sampling with sorting
+vector<long long> SampenCalculatorUniform::_ComputeAB(
     const vector<int> &data, unsigned m, int r) 
 {
-    vector<Point> points = get_points(data, m + 1);
-    std::sort(points.begin(), points.end(), 
-        [](const Point &p1, const Point &p2) 
-        {
-            for (unsigned i = 0; i < p1.dim(); i++) 
-            {
-                if (p1[i] > p2[i]) return true;
-                if (p1[i] < p2[i]) return false;
-            }
-            return true;
-        });
+    vector<Point> points = GetPoints(data, m + 1);
     vector<Point> sampled_points(sample_size);
     
     uniform_int_generator uig(
-        0, points.size()-1, uniform_int_generator::QUASI, random);
-    AB_calculator_point_d ABc;
+        0, points.size()-1, uniform_int_generator::PSEUDO, random);
+    ABCalculatorPointD ABc;
 
     vector<long long> AB(2);
-    vector<long long> ABs(2, 0);
+    vector<long long> ABs(2 * sample_num, 0);
     for (int i = 0; i < sample_num; i++)
     {
         for (int j = 0; j < sample_size; j++)
@@ -66,55 +57,39 @@ vector<long long> sampen_calculator_qr::_compute_AB(
             // vector<int> p(data.cbegin() + idx, data.cbegin() + idx + m + 1);
             sampled_points[j] = points[idx];
         }
-        AB = ABc.compute_AB(sampled_points, r);
-        ABs[0] += AB[0];
-        ABs[1] += AB[1];
+        AB = ABc.ComputeAB(sampled_points, r);
+        ABs[2 * i] += AB[0];
+        ABs[2 * i + 1] += AB[1];
     }
     return ABs;
 }
 
-vector<long long> sampen_calculator_qr2::_compute_AB(
+// Quasi-random sampling with sorting
+vector<long long> SampenCalculatorQR::_ComputeAB(
     const vector<int> &data, unsigned m, int r) 
 {
-    vector<Point> points = get_points(data, m + 1);
+    vector<Point> points = GetPoints(data, m + 1);
+    if (presort) {
+        std::sort(points.begin(), points.end(),
+                  [](const Point &p1, const Point &p2) {
+                      for (unsigned i = 0; i < p1.dim(); i++)
+                      {
+                          if (p1[i] > p2[i])
+                              return true;
+                          if (p1[i] < p2[i])
+                              return false;
+                      }
+                      return true;
+                  });
+    }
     vector<Point> sampled_points(sample_size);
-    std::sort(points.begin(), points.end(), 
-        [](const Point &p1, const Point &p2) 
-        {
-            for (unsigned i = 0; i < p1.dim(); i++) 
-            {
-                if (p1[i] > p2[i]) return true;
-                if (p1[i] < p2[i]) return false;
-            }
-            return true;
-        });
     
-    AB_calculator_point_d ABc;
-
-    vector<long long> AB(2);
-    vector<long long> ABs(2, 0);
-
     uniform_int_generator uig(
         0, points.size()-1, uniform_int_generator::QUASI, random);
-    unsigned iter_num = 8;
-    // double decay_rate = 0.8;
-    for (unsigned i = 0; i < iter_num; i++) 
-    {
-        for (unsigned j = 0; j < 9182; j++)
-        {
-            int idx = uig.get();
-            Point p = points[idx];
-            for (unsigned k = 0; k < points.size(); k++)
-            {
-                if (points[k].within(p, m+1, r)) points[k].increaseCountByOne();
-            }
-        }
-        std::sort(points.begin(), points.end(), 
-            [] (const Point &p1, const Point &p2) {
-                return (p1.count() > p2.count());
-            });
-    }
+    ABCalculatorPointD ABc;
 
+    vector<long long> AB(2);
+    vector<long long> ABs(2 * sample_num, 0);
     for (int i = 0; i < sample_num; i++)
     {
         for (int j = 0; j < sample_size; j++)
@@ -124,42 +99,42 @@ vector<long long> sampen_calculator_qr2::_compute_AB(
             // vector<int> p(data.cbegin() + idx, data.cbegin() + idx + m + 1);
             sampled_points[j] = points[idx];
         }
-        AB = ABc.compute_AB(sampled_points, r);
-        ABs[0] += AB[0];
-        ABs[1] += AB[1];
+        AB = ABc.ComputeAB(sampled_points, r);
+        ABs[2 * i] += AB[0];
+        ABs[2 * i + 1] += AB[1];
     }
     return ABs;
 }
 
-vector<long long> sampen_calculator_nkd::_compute_AB(
+vector<long long> SampenCalculatorNKD::_ComputeAB(
     const vector<int> &data, unsigned m, int r) 
 {
     uniform_int_generator uig(
         0, data.size() - 1, uniform_int_generator::PSEUDO, random);
-    AB_calculator_point_d ABc;
+    ABCalculatorPointD ABc;
 
     vector<long long> AB(2);
     vector<long long> ABs(2 * sample_num_, 0);
     
     auto max_level = static_cast<unsigned>(log2(sample_size_));
-    vector<Point> points = get_points(data, m + 1);
+    vector<Point> points = GetPoints(data, m + 1);
     NewKDTree kdtree(points, max_level);
     for (int i = 0; i < sample_num_; i++)
     {
         auto sampled_points = kdtree.Sample(sample_size_);
-        AB = ABc.compute_AB(sampled_points, r);
+        AB = ABc.ComputeAB(sampled_points, r);
         ABs[i * 2] = AB[0];
         ABs[i * 2 + 1] = AB[1];
     }
     return ABs;
 }
 
-vector<long long> sampen_calculator_hg::_compute_AB(
+vector<long long> SampenCalculatorHG::_ComputeAB(
     const vector<int> &data, unsigned m, int r) 
 {
-    AB_calculator_point_d ABc;
+    ABCalculatorPointD ABc;
 
-    vector<Point> points = get_points(data, m + 1);
+    vector<Point> points = GetPoints(data, m + 1);
     int max_data = *std::max_element(data.cbegin(), data.cend());
     int min_data = *std::min_element(data.cbegin(), data.cend());
 
@@ -176,7 +151,7 @@ vector<long long> sampen_calculator_hg::_compute_AB(
     for (unsigned i = 0; i < vec_points.size(); i++)
     {
         vector<long long> AB(2);
-        AB = ABc.compute_AB(vec_points[i], r);
+        AB = ABc.ComputeAB(vec_points[i], r);
         ABs[0] += AB[0];
         ABs[1] += AB[1];
     }
@@ -184,7 +159,7 @@ vector<long long> sampen_calculator_hg::_compute_AB(
     return ABs;
 }
 
-vector<long long> sampen_calculator_kd::_compute_AB(
+vector<long long> SampenCalculatorKD::_ComputeAB(
     const vector<int> &data, unsigned m, int r) 
 {
     long long A = 0, B = 0;
@@ -304,7 +279,7 @@ SampleCoreset(const vector<Point> &points,
 vector<double> SampenCalculatorCoreset::_ComputeAB(
     const vector<int> &data, unsigned m, int r) 
 {
-    vector<Point> points = get_points(data, m + 1);
+    vector<Point> points = GetPoints(data, m + 1);
     auto sampled = SampleCoreset(points, sample_size, sample_num);
     auto sampled_points = sampled.first;
     auto weights = sampled.second;
@@ -321,18 +296,21 @@ vector<double> SampenCalculatorCoreset::_ComputeAB(
 }
 
 double SampenCalculatorCoreset::ComputeSampen(
-    const vector<int> &data, unsigned m, int r)
+    const vector<int> &data, unsigned m, int r, double *a, double *b)
 {
     auto start = std::chrono::system_clock::now();
     auto AB = _ComputeAB(data, m, r);
-    double sampen = compute_sampen(AB[0], AB[1], data.size(), m);
+    double sampen = ComputeSampenAB(AB[0], AB[1], data.size(), m);
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> interval = end - start;
     std::cout << "time: " << interval.count() << "s" << std::endl;
+
+    if (a) *a = AB[0];
+    if (b) *b = AB[1];
     return sampen;
 }
 
-vector<long long> sampen_calculator_kdg::_compute_AB(
+vector<long long> SampenCalculatorKDG::_ComputeAB(
     const vector<int> &data, unsigned m, int r) 
 {
 
@@ -368,7 +346,7 @@ vector<long long> sampen_calculator_kdg::_compute_AB(
 
 // compute A and B with points using direct method
 // TODO: this part can be parallelized
-vector<long long> AB_calculator_point_d::compute_AB(
+vector<long long> ABCalculatorPointD::ComputeAB(
     const vector<Point> &points, int r)
 {
     vector<long long> result(2, 0);
@@ -396,11 +374,9 @@ vector<long long> AB_calculator_point_d::compute_AB(
 }
 
 
-long long count_range_point_rt(const vector<Point> &points, 
+long long CountPointsRT(const vector<Point> &points, 
                                const unsigned m, const int r)
 {
-	struct timespec tstart, tend;
-
     /* build tree */
     RT::RangeTree<int, int> rtree(points);
     vector<int> lower(m, 0), upper(m, 0);
@@ -419,7 +395,7 @@ long long count_range_point_rt(const vector<Point> &points,
     return result;
 }
 
-vector<long long> AB_calculator_point_rt::compute_AB(
+vector<long long> ABCalculatorPointRT::ComputeAB(
     const vector<Point> &points, int r)
 {
     vector<long long> result(2, 0);
@@ -429,12 +405,12 @@ vector<long long> AB_calculator_point_rt::compute_AB(
     long long B = 0;
     unsigned m = points[0].dim() - 1;
     unsigned N = points.size() + m;
-    B = count_range_point_rt(points, m + 1, r);
+    B = CountPointsRT(points, m + 1, r);
     B -= (N - m);
     vector<Point> _points(points.size());
     std::transform(points.begin(), points.end(), _points.begin(), 
                    [](const Point &p) -> Point { return p.drop_last(); });
-    A = count_range_point_rt(_points, m, r);
+    A = CountPointsRT(_points, m, r);
     A -= (N - m);
     result[0] = A;
     result[1] = B;
@@ -467,4 +443,87 @@ vector<double> ABCalculatorDirectWeighted::ComputeAB(
     result[0] = A;
     result[1] = B;
     return result;
+} 
+
+double ComputeSampenDirect(
+    const vector<int> &data, unsigned m, int r, 
+    double *a, double *b)
+{
+    SampenCalculatorD sc;
+    return sc.ComputeEntropy(data, m, r, a, b);
+}
+
+double ComputeSampenRangetree(
+    const vector<int> &data, unsigned m, int r, 
+    double *a, double *b)
+{
+    SampenCalculatorRT sc;
+    return sc.ComputeEntropy(data, m, r, a, b);
+}
+
+double ComputeSampenKdtree(
+    const vector<int> &data, unsigned m, int r, 
+    double *a, double *b)
+{
+    SampenCalculatorKD sc;
+    return sc.ComputeEntropy(data, m, r, a, b);
+}
+
+double ComputeSampenNkdtreeHist(
+    const vector<int> &data, unsigned m, int r, 
+    unsigned sample_size, unsigned sample_num, 
+    double *a, double *b)
+{
+    SampenCalculatorNKD sc(sample_size, sample_num);
+    return sc.ComputeEntropy(data, m, r, a, b);
+}
+
+double ComputeSampenKdtreeGrid(
+    const vector<int> &data, unsigned m, int r, 
+    double *a, double *b)
+{
+    SampenCalculatorKDG sc;
+    return sc.ComputeEntropy(data, m, r, a, b);
+}
+
+double ComputeSampenQR(
+    const vector<int> &data, const unsigned m, const int r, 
+    const unsigned sample_size, const unsigned sample_num, 
+    double *a, double *b) 
+{
+    SampenCalculatorQR sc(sample_num, sample_size, false);
+    return sc.ComputeEntropy(data, m, r, a, b);
+}
+
+double ComputeSampenQR2(
+    const vector<int> &data, const unsigned m, const int r, 
+    const unsigned sample_size, const unsigned sample_num, 
+    double *a, double *b) 
+{
+    SampenCalculatorQR sc(sample_num, sample_size, true);
+    return sc.ComputeEntropy(data, m, r, a, b);
+}
+
+double ComputeSampenCoreset(
+    const vector<int> &data, unsigned m, int r, 
+    unsigned sample_size, unsigned sample_num, double *a, double *b)
+{
+    SampenCalculatorCoreset sc(sample_num, sample_size);
+    return sc.ComputeSampen(data, m, r, a, b);
+}
+
+double ComputeSampenUniform(
+    const vector<int> &data, unsigned m, int r, 
+    unsigned sample_size, unsigned sample_num, double *a, double *b)
+{
+    SampenCalculatorUniform sc(sample_num, sample_size);
+    return sc.ComputeEntropy(data, m, r, a, b);
+}
+
+double ComputeSampenRangetreeHist(
+    const vector<int> &data, const unsigned m, 
+    const int r, double sample_rate, double *a, double *b)
+{
+    SampenCalculatorHG sc(sample_rate);
+    return sc.ComputeEntropy(data, m, r, a, b);
 }

@@ -101,16 +101,18 @@ int main(int argc, char *argv[])
     cout.setf(std::ios::fixed, std::ios::floatfield);
     cout.precision(6);
 
-    sampen_calculator_d sc;
-    double ground_truth = sc.compute_entropy(data, _status.m, _status.r);
+    SampenCalculatorD sc;
+    double ground_truth = sc.ComputeEntropy(
+        data, _status.m, _status.r, nullptr, nullptr);
     std::cout << "SampleEntropy(" << N << ", " << _status.m << ", " << _status.r;
     std::cout << ") = " << ground_truth << std::endl;
     vector<double> results(_status.rounds);
     vector<double> errors(_status.rounds);
     for (unsigned i = 0; i < _status.rounds; i++)
     {
-        sampen_calculator_qr sc(sample_num, sample_size, true);
-        results[i] = sc.compute_entropy(data, _status.m, _status.r);
+        SampenCalculatorQR sc(sample_num, sample_size, true);
+        results[i] = sc.ComputeEntropy(
+            data, _status.m, _status.r, nullptr, nullptr);
         
         errors[i] = results[i] - ground_truth;
         std::cout << "Sampen: " << results[i] << ", ";
