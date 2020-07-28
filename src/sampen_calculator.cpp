@@ -11,6 +11,9 @@
 #include <string.h>
 #include <math.h>
 #include <utility>
+#include <thread>
+#include <functional>
+#include <numeric>
 
 #include "sampen_calculator.h"
 #include "random_sampler.h"
@@ -343,34 +346,90 @@ vector<long long> SampenCalculatorKDG::_ComputeAB(
     return result;
 }
 
+void CountMatched(const vector<Point> &points, 
+                  int r, 
+                  unsigned offset, 
+                  unsigned interval, 
+                  vector<long long> &As, 
+                  vector<long long> &Bs)
+{
+    unsigned n = points.size();
+    unsigned m = points[0].dim() - 1;
+    unsigned index = 0;
+    for (unsigned i = 0; (index = i * interval + offset) < n; ++i) 
+    {
+        const Point &p = points[index];
+        for (unsigned j = index + 1; j < n; j++) 
+        {
+            if (p.within(points[j], m, r)) {
+                As[offset] += 1;
+                if (-r <= p[m] - points[j][m] && p[m] - points[j][m] <= r) 
+                {
+                    Bs[offset] += 1;
+                }
+            }
+        }
+    }
+}
+
+vector<long long> CountMatchedPara(const vector<Point> &points, int r) 
+{
+    unsigned n = points.size();
+    unsigned num_threads = std::thread::hardware_concurrency();
+    if (!num_threads) num_threads = 16;
+    else if (num_threads > 12) num_threads -= 8;
+    else num_threads /= 2;
+
+    vector<long long> As(num_threads, 0), Bs(num_threads, 0);
+    if (num_threads > n) num_threads = n / 2;
+    vector<std::thread> threads;
+    for (unsigned i = 0; i < num_threads; i++) 
+    {
+        threads.push_back(
+            std::thread(CountMatched, std::cref(points), r, 
+                        i, num_threads, std::ref(As), std::ref(Bs)));
+    }
+    for (unsigned i = 0; i < num_threads; i++) 
+    {
+        threads[i].join();
+    }
+    vector<long long> AB(2);
+    AB[0] = std::accumulate(As.cbegin(), As.cend(), static_cast<long long>(0));
+    AB[1] = std::accumulate(Bs.cbegin(), Bs.cend(), static_cast<long long>(0));
+    return AB;
+}
+
 
 // compute A and B with points using direct method
 // TODO: this part can be parallelized
 vector<long long> ABCalculatorPointD::ComputeAB(
     const vector<Point> &points, int r)
 {
-    vector<long long> result(2, 0);
-    if (points.size() == 0) return result;
-
-    long long A = 0;
-    long long B = 0;
     unsigned m = points[0].dim() - 1;
-    for (unsigned i = 0; i < points.size(); i++)
-    {
-        for (unsigned j = i + 1; j < points.size(); j++)
-        {
-            if (points[i].within(points[j], m, r)) 
-            {
-                A += 1;
-                int diff = points[j][m] - points[i][m];
-                if ((-r <= diff) && (diff <= r))
-                    B += 1;
-            }
-        }
-    }
-    result[0] = A;
-    result[1] = B;
+    unsigned n = points.size();
+    vector<long long> result(2, 0);
+    if (n == 0) return result;
+
+    result = CountMatchedPara(points, r);
     return result;
+    // long long A = 0;
+    // long long B = 0;
+    // for (unsigned i = 0; i < n; i++)
+    // {
+    //     for (unsigned j = i + 1; j < n; j++)
+    //     {
+    //         if (points[i].within(points[j], m, r)) 
+    //         {
+    //             A += 1;
+    //             int diff = points[j][m] - points[i][m];
+    //             if ((-r <= diff) && (diff <= r))
+    //                 B += 1;
+    //         }
+    //     }
+    // }
+    // result[0] = A;
+    // result[1] = B;
+    // return result;
 }
 
 

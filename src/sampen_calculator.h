@@ -46,11 +46,11 @@ public:
                                   unsigned m, int r, double *a, double *b)
     {
         _CheckDim(data, m);
-        auto start = std::chrono::system_clock::now();
+        // auto start = std::chrono::system_clock::now();
         vector<long long> AB = _ComputeAB(data, m, r);
-        auto end = std::chrono::system_clock::now();
-        std::chrono::duration<double> interval = end - start;
-        std::cout << "time: " << interval.count() << "s" << std::endl;
+        // auto end = std::chrono::system_clock::now();
+        // std::chrono::duration<double> interval = end - start;
+        // std::cout << "time: " << interval.count() << "s" << std::endl;
 
         unsigned N = data.size();
         unsigned sample_num = AB.size() / 2;

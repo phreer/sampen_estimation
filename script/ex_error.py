@@ -13,19 +13,42 @@ parser.add_argument('-m', type=int, required=True, help='The template length m. 
 parser.add_argument('-r', type=float, default=0.1, help='The threshold r. ')
 parser.add_argument('-sample_size', type=int, required=True, help='The number of points to sample. ')
 parser.add_argument('-sample_num', type=int, required=True, help='The number of results to be averaged. ')
+parser.add_argument('-input_format', type=str, default='simple', choices=['simple', 'multi-record'], 
+                    help='The format of the input file. If set to be simple, then there is one record '
+                    'in the file, and each line contains a single column. If set to be multi-record, '
+                    'then multiple records may be contained in the file, and each there are NUM_RECORD + 1 '
+                    'columns per line, of which the first is the line number and the rest NUM_RECORD '
+                    'ones are signals. ')
 
-def readfile(filename):
+def readfile(filename, n=None, input_format='simple'):
     """
-    Read a file to a list of integers. 
+    Read a file to a list or lists of integers with length `n`, according to 
+    the `input_format`.. 
+
     @note: The file is supposed to be lines of integers. 
     """
     with open(filename) as f:
         lines = f.readlines()
 
-    result = list()
-    for line in lines:
-        if (line.strip()):
-            result.append(int(line))
+    if input_format == 'simple': 
+        result = list()
+        count = 0
+        for line in lines:
+            if (line.strip()):
+                result.append(int(line))
+                count += 1
+                if count == n: 
+                    break 
+    elif input_format == 'multi-record':
+        result = list() 
+        count = 0
+        for line in lines:
+            if line.strip():
+                result.append(line.split()[1:])
+                count += 1
+                if count == n:
+                    break 
+        result = list(map(list, zip(*result)))
     
     return result
 
@@ -119,7 +142,7 @@ def main():
         for filename in filenames:
             output_filename = os.path.join(os.path.basename(filename))
             f = open(os.path.join(output_dir, output_filename), 'w')
-            sys.stdout = f
+            # sys.stdout = f
             experiment(filename, args.n, args.m, args.r, args.sample_size, args.sample_num)
             f.close()
 
