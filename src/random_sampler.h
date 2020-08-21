@@ -26,9 +26,17 @@ public:
      */
     uniform_int_generator(
         int _rangel, int _ranger, random_type _rtype, bool _random = false): 
-            rangel(_rangel), ranger(_ranger), rtype(_rtype), random(_random)
+            rangel(_rangel), ranger(_ranger), rtype(_rtype), 
+            real_random(_random)
     {
         init_state();
+    }
+    ~uniform_int_generator() 
+    {
+        if (rtype == QUASI) 
+        {
+            gsl_qrng_free(qrng); 
+        }
     }
     int get();
 private:
@@ -39,7 +47,7 @@ private:
     gsl_qrng *qrng;
     int sample;
     // Whether to set seed randomly.
-    bool random;
+    bool real_random;
     void init_state();
 };
 

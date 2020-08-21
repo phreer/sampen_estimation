@@ -65,6 +65,7 @@ public:
         }
         if (a) *a = A / sample_num;
         if (b) *b = B / sample_num;
+
         result = ComputeSampenAB(A, B, N, m);
 
         return result;
@@ -108,8 +109,9 @@ class SampenCalculatorUniform: public SampenCalculator
 {
 public:
     explicit SampenCalculatorUniform(
-        unsigned sample_num_, unsigned sample_size_, bool random = false)
-        : sample_num(sample_num_), sample_size(sample_size_), random(random) 
+        unsigned sample_num_, unsigned sample_size_, bool random_ = false)
+        : sample_num(sample_num_), sample_size(sample_size_), 
+        real_random(random_) 
     {}
     void set_sample_num(unsigned sample_num_) { sample_num = sample_num_; }
     void set_sample_size(unsigned sample_size_)
@@ -119,20 +121,20 @@ public:
 
 private:
     virtual vector<long long> _ComputeAB(const vector<int> &data,
-                                          unsigned m, int r) override;
+                                         unsigned m, int r) override;
     unsigned sample_num;
     unsigned sample_size;
-    bool random;
+    bool real_random;
 };
 
 // quasi-random sampling
 class SampenCalculatorQR: public SampenCalculator
 {
-public:
+public: 
     explicit SampenCalculatorQR(unsigned sample_num_, unsigned sample_size_, 
-                                bool presort = true, bool random = false) 
+                                bool presort = true, bool _random = false) 
         : sample_num(sample_num_), sample_size(sample_size_), 
-        presort(presort), random(random) 
+        real_random(_random), presort(presort)
     {}
     void set_sample_num(unsigned sample_num_) { sample_num = sample_num_; }
     void set_sample_size(unsigned sample_size_)
@@ -142,10 +144,10 @@ public:
 
 private:
     virtual vector<long long> _ComputeAB(const vector<int> &data,
-                                          unsigned m, int r) override;
+                                         unsigned m, int r) override;
     unsigned sample_num;
     unsigned sample_size;
-    bool random;
+    bool real_random;
     bool presort;
 };
 

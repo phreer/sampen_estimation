@@ -46,23 +46,30 @@ vector<long long> SampenCalculatorUniform::_ComputeAB(
     vector<Point> sampled_points(sample_size);
     
     uniform_int_generator uig(
-        0, points.size()-1, uniform_int_generator::PSEUDO, random);
+        0, points.size()-1, uniform_int_generator::PSEUDO, real_random);
     ABCalculatorPointD ABc;
 
     vector<long long> AB(2);
     vector<long long> ABs(2 * sample_num, 0);
-    for (int i = 0; i < sample_num; i++)
+    for (unsigned i = 0; i < sample_num; i++)
     {
-        for (int j = 0; j < sample_size; j++)
+        for (unsigned j = 0; j < sample_size; j++)
         {
             // generate points
-            int idx = uig.get();
+            unsigned idx = static_cast<unsigned>(uig.get());
             // vector<int> p(data.cbegin() + idx, data.cbegin() + idx + m + 1);
             sampled_points[j] = points[idx];
         }
         AB = ABc.ComputeAB(sampled_points, r);
         ABs[2 * i] += AB[0];
         ABs[2 * i + 1] += AB[1];
+#ifdef DEBUG
+        double normalizer = pow(sample_size - 1., 2.); 
+        std::cout << "A: " << AB[0] << " ("; 
+        std::cout << static_cast<double>(AB[0]) / normalizer << ")\n";
+        std::cout << "B: " << AB[1] << " ("; 
+        std::cout << static_cast<double>(AB[1]) / normalizer << ")\n";
+#endif 
     }
     return ABs;
 }
@@ -72,9 +79,11 @@ vector<long long> SampenCalculatorQR::_ComputeAB(
     const vector<int> &data, unsigned m, int r) 
 {
     vector<Point> points = GetPoints(data, m + 1);
+    unsigned n = points.size(); 
     if (presort) {
         std::sort(points.begin(), points.end(),
-                  [](const Point &p1, const Point &p2) {
+                  [] (const Point &p1, const Point &p2) 
+                  {
                       for (unsigned i = 0; i < p1.dim(); i++)
                       {
                           if (p1[i] > p2[i])
@@ -85,26 +94,59 @@ vector<long long> SampenCalculatorQR::_ComputeAB(
                       return true;
                   });
     }
-    vector<Point> sampled_points(sample_size);
     
     uniform_int_generator uig(
-        0, points.size()-1, uniform_int_generator::QUASI, random);
+        0, n - 1, uniform_int_generator::QUASI, real_random);
     ABCalculatorPointD ABc;
 
+    uniform_int_generator tmp_uig(
+        0, n - 1, uniform_int_generator::PSEUDO, real_random);
     vector<long long> AB(2);
     vector<long long> ABs(2 * sample_num, 0);
-    for (int i = 0; i < sample_num; i++)
+    vector<Point> sampled_points(sample_size);
+    vector<unsigned> indices(sample_size); 
+    vector<unsigned> offsets(sample_num - 1); 
+    for (unsigned j = 0; j < sample_size; j++)
     {
-        for (int j = 0; j < sample_size; j++)
+        indices[j] = static_cast<unsigned>(uig.get());
+        // indices[j] = (n / sample_size) * j;
+    }
+    for (unsigned i = 0; i < sample_num - 1; ++i) 
+    {
+        offsets[i] = static_cast<unsigned>(tmp_uig.get()); 
+    }
+    for (unsigned i = 0; i < sample_num; i++)
+    {
+        vector<unsigned> tmp_indices(sample_size); 
+        if (i) 
         {
-            // generate points
-            int idx = uig.get();
-            // vector<int> p(data.cbegin() + idx, data.cbegin() + idx + m + 1);
-            sampled_points[j] = points[idx];
+            unsigned offset = offsets[i - 1]; 
+            for (unsigned j = 0; j < sample_size; ++j) 
+            {
+                tmp_indices[j] = (indices[j] + offset) % n; 
+            }
+        }
+        else {
+            for (unsigned j = 0; j < sample_size; ++j) 
+            {
+                tmp_indices[j] = indices[j]; 
+            }
+        }
+        
+        for (unsigned j = 0; j < sample_size; ++j) 
+        {
+            sampled_points[j] = points[tmp_indices[j]];
         }
         AB = ABc.ComputeAB(sampled_points, r);
         ABs[2 * i] += AB[0];
         ABs[2 * i + 1] += AB[1];
+#ifdef DEBUG 
+        double normalizer = pow(sample_size - 1., 2.); 
+        std::cout << "A: " << AB[0] << " ("; 
+        std::cout << static_cast<double>(AB[0]) / normalizer << ")\n";
+        std::cout << "B: " << AB[1] << " ("; 
+        std::cout << static_cast<double>(AB[1]) / normalizer << ")\n";
+#endif 
     }
     return ABs;
 }
@@ -112,8 +154,6 @@ vector<long long> SampenCalculatorQR::_ComputeAB(
 vector<long long> SampenCalculatorNKD::_ComputeAB(
     const vector<int> &data, unsigned m, int r) 
 {
-    uniform_int_generator uig(
-        0, data.size() - 1, uniform_int_generator::PSEUDO, random);
     ABCalculatorPointD ABc;
 
     vector<long long> AB(2);
@@ -122,7 +162,7 @@ vector<long long> SampenCalculatorNKD::_ComputeAB(
     auto max_level = static_cast<unsigned>(log2(sample_size_));
     vector<Point> points = GetPoints(data, m + 1);
     NewKDTree kdtree(points, max_level);
-    for (int i = 0; i < sample_num_; i++)
+    for (unsigned i = 0; i < sample_num_; i++)
     {
         auto sampled_points = kdtree.Sample(sample_size_);
         AB = ABc.ComputeAB(sampled_points, r);
@@ -147,8 +187,10 @@ vector<long long> SampenCalculatorHG::_ComputeAB(
     auto end = std::chrono::system_clock::now();
 
     std::chrono::duration<double> interval = end - start;
+#ifdef DEBUG 
     std::cout << "Time consumed in sample_hist: ";
     std::cout << interval.count() << "s" << std::endl;
+#endif 
     vector<long long> ABs(2, 0);
 
     for (unsigned i = 0; i < vec_points.size(); i++)
@@ -301,12 +343,8 @@ vector<double> SampenCalculatorCoreset::_ComputeAB(
 double SampenCalculatorCoreset::ComputeSampen(
     const vector<int> &data, unsigned m, int r, double *a, double *b)
 {
-    auto start = std::chrono::system_clock::now();
     auto AB = _ComputeAB(data, m, r);
     double sampen = ComputeSampenAB(AB[0], AB[1], data.size(), m);
-    auto end = std::chrono::system_clock::now();
-    std::chrono::duration<double> interval = end - start;
-    std::cout << "time: " << interval.count() << "s" << std::endl;
 
     if (a) *a = AB[0];
     if (b) *b = AB[1];
@@ -400,18 +438,18 @@ vector<long long> CountMatchedPara(const vector<Point> &points, int r)
 }
 
 
-// compute A and B with points using direct method
+// Compute A and B with points using direct method
 // TODO: this part can be parallelized
 vector<long long> ABCalculatorPointD::ComputeAB(
     const vector<Point> &points, int r)
 {
-    unsigned m = points[0].dim() - 1;
     unsigned n = points.size();
     vector<long long> result(2, 0);
     if (n == 0) return result;
 
     result = CountMatchedPara(points, r);
     return result;
+    // unsigned m = points[0].dim() - 1;
     // long long A = 0;
     // long long B = 0;
     // for (unsigned i = 0; i < n; i++)

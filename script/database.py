@@ -3,12 +3,10 @@ from datetime import datetime
 
 from sqlalchemy import Integer, Float, Boolean, String, DateTime, Column
 from sqlalchemy import ForeignKey, create_engine
-from sqlalchemy.orm import relationship, sessionmaker 
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base 
 
 Base = declarative_base() 
-engine = create_engine('sqlite:///result/result0727.db') 
-Session = sessionmaker(engine) 
 
 class Result(Base): 
     __tablename__ = 'results' 

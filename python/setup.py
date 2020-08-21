@@ -7,5 +7,9 @@ ext = Extension(name='sampen',
                 library_dirs=["/home/phree/local/lib"], 
                 include_dirs=['/home/phree/local/include'])
 
-setup(name="sampen", version="1.0", description="Aimed at Fast Entropy Calculation. ", 
-      author="phree", author_email="liu.wf@outlook.com", ext_modules=[ext])
+setup(name="sampen", 
+      version="1.0", 
+      description="Aimed at Fast Entropy Calculation. ", 
+      author="phree", 
+      author_email="liu.wf@outlook.com", 
+      ext_modules=[ext])

@@ -4,7 +4,7 @@ set(EXECUTABLE_SRC_MAIN sampen.cpp)
 set(EXECUTABLE_SRC_VAR sampen_var.cpp)
 set(HEAD_LIST "kdtree.h\;random_sampler.h\;RangeTree2.h\;sampen_calculator.h\;tensor.h\;utils.h")
 set(LIB_SRC_LIST random_sampler.cpp utils.cpp sampen_calculator.cpp kdtree.cpp)
-set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g")
+set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -DDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O3")
 
 message(STATUS "Headers: " ${HEAD_LIST})

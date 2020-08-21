@@ -53,11 +53,11 @@ private:
         vector<shared_ptr<const KDTreeNode> > &node_ptrs) const;
     // Pointers to points in this node
     vector<Point *> point_ptrs_;
+    vector<int> ranges_;
     bool is_leaf_;
+    unsigned level_;
     shared_ptr<KDTreeNode> lc_;
     shared_ptr<KDTreeNode> rc_;
-    vector<int> ranges_;
-    unsigned level_;
 };
 
 class NewKDTree 
@@ -85,13 +85,13 @@ public:
     }
 private:
     void BuildKDTree_(unsigned max_level);
-    KDTreeNode root_;
+    vector<Point> points_;
     // The leaf node pointers
     vector<shared_ptr<const KDTreeNode> > node_ptrs_;
     // All data points
-    vector<Point> points_;
     // Dimemsion of the kd-tree, namely k in the kd-tree
     unsigned dim_;
+    KDTreeNode root_;
 };
 
 struct kdtree {

@@ -43,28 +43,24 @@ vector<unsigned> random_permutation(unsigned n)
 void uniform_int_generator::init_state() 
 {
     if (rangel > ranger) 
-    throw std::logic_error("rangel is larger than ranger.");
-    if (rtype == PSEUDO)
+    throw std::invalid_argument("rangel is larger than ranger.");
+
+    if (real_random) 
     {
-        eng.seed(
-            std::chrono::system_clock::now().time_since_epoch().count());
+        std::random_device rd;
+        eng.seed(std::chrono::system_clock::now().time_since_epoch().count());
+    }
+    else 
+    {
+        eng.seed(0); 
+    }
+    if (rtype == PSEUDO) 
+    {
         uid = std::uniform_int_distribution<int>(rangel, ranger);
     }
     else if (rtype == QUASI) 
     {
         qrng = gsl_qrng_alloc(gsl_qrng_sobol, 1);
-        if (random) 
-        {
-            std::random_device rd;
-            std::mt19937 rng(rd());
-            std::uniform_int_distribution<unsigned> uid;
-            unsigned s = uid(rng) % 2048;
-            double t;
-            while (s--) 
-            {
-                gsl_qrng_get(qrng, &t);
-            }
-        }
     }
     else if (rtype == SHUFFLE)
     {
@@ -80,7 +76,6 @@ int uniform_int_generator::get()
     case PSEUDO:
         sample = uid(eng);
         break;
-    
     case QUASI:
         double v;
         gsl_qrng_get(qrng, &v);
